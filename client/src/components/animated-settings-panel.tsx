@@ -85,9 +85,11 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
     }
   }, [isOpen]);
 
-  // Save settings to localStorage whenever they change
+  // Debounced save to localStorage for performance
   useEffect(() => {
-    localStorage.setItem('glauncher-settings', JSON.stringify(settings));
+    const saveTimeout = setTimeout(() => {
+      localStorage.setItem('glauncher-settings', JSON.stringify(settings));
+    }, 200);
     
     // Apply theme changes to document
     document.documentElement.setAttribute('data-theme', settings.theme);
@@ -100,15 +102,17 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
     } else {
       document.documentElement.style.setProperty('--animation-duration', '0.2s');
     }
+    
+    return () => clearTimeout(saveTimeout);
   }, [settings]);
 
-  const updateSetting = <K extends keyof GameSettings>(key: K, value: GameSettings[K]) => {
+  const updateSetting = useCallback(<K extends keyof GameSettings>(key: K, value: GameSettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
-  };
+  }, []);
 
-  const resetSettings = () => {
+  const resetSettings = useCallback(() => {
     setSettings(defaultSettings);
-  };
+  }, []);
 
   if (!isVisible && !isOpen) return null;
 
