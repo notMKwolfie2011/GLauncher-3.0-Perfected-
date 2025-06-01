@@ -211,7 +211,7 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
             src={`/api/files/${currentFile.id}/content`}
             className="w-full h-full border-0"
             title={currentFile.originalName}
-            sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-downloads allow-downloads-without-user-activation"
             allowFullScreen
             tabIndex={0}
             onLoad={(e) => {
