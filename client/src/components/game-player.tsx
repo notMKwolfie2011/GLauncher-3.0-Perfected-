@@ -211,23 +211,33 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
             src={`/api/files/${currentFile.id}/content`}
             className="w-full h-full border-0"
             title={currentFile.originalName}
-            sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-downloads allow-downloads-without-user-activation"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-downloads allow-downloads-without-user-activation allow-top-navigation-by-user-activation"
             allowFullScreen
             tabIndex={0}
             onLoad={(e) => {
               // Focus the iframe after loading to ensure keyboard input works
               const iframe = e.target as HTMLIFrameElement;
-              iframe.focus();
-              
-              // Also try to focus the iframe content
-              try {
-                iframe.contentWindow?.focus();
-              } catch (error) {
-                console.log('Cannot focus iframe content due to CORS policy');
-              }
+              setTimeout(() => {
+                iframe.focus();
+                try {
+                  iframe.contentWindow?.focus();
+                } catch (error) {
+                  console.log('Cannot focus iframe content due to CORS policy');
+                }
+              }, 100);
             }}
             onClick={(e) => {
               // Ensure focus when clicked
+              const iframe = e.target as HTMLIFrameElement;
+              iframe.focus();
+              try {
+                iframe.contentWindow?.focus();
+              } catch (error) {
+                console.log('Cannot focus iframe content');
+              }
+            }}
+            onMouseEnter={(e) => {
+              // Focus on mouse enter to improve responsiveness
               const iframe = e.target as HTMLIFrameElement;
               iframe.focus();
             }}
@@ -235,8 +245,8 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
           
           {/* Game instructions overlay */}
           <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
-            <i className="fas fa-mouse-pointer mr-2"></i>
-            Click game area to enable keyboard input
+            <i className="fas fa-keyboard mr-2"></i>
+            Click and hover over game area for keyboard controls
           </div>
           
           {/* Fullscreen hint overlay */}
