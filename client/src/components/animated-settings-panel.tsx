@@ -19,7 +19,7 @@ interface GameSettings {
   audioVolume: number;
   autoSave: boolean;
   performanceMode: 'high' | 'balanced' | 'battery';
-  theme: 'dark' | 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'cyberpunk' | 'retro';
+  theme: 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'cyberpunk' | 'retro';
   showFPS: boolean;
   pauseOnBlur: boolean;
   mouseInvert: boolean;
@@ -491,6 +491,7 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="dark">🌙 Dark</SelectItem>
+                  <SelectItem value="light">☀️ Light</SelectItem>
                   <SelectItem value="blue">🌊 Ocean Blue</SelectItem>
                   <SelectItem value="purple">🔮 Purple Magic</SelectItem>
                   <SelectItem value="green">🌿 Forest Green</SelectItem>

@@ -35,10 +35,71 @@
 
 [data-theme="blue"] {
   --gaming-primary: 210 90% 66%;
+  --gaming-secondary: 220 85% 60%;
 }
 
 [data-theme="purple"] {
   --gaming-primary: 280 90% 66%;
+  --gaming-secondary: 290 85% 60%;
+}
+
+[data-theme="green"] {
+  --gaming-primary: 120 90% 50%;
+  --gaming-secondary: 130 85% 45%;
+  --primary: 120 90% 50%;
+}
+
+[data-theme="red"] {
+  --gaming-primary: 0 90% 66%;
+  --gaming-secondary: 10 85% 60%;
+  --primary: 0 90% 66%;
+}
+
+[data-theme="orange"] {
+  --gaming-primary: 30 90% 66%;
+  --gaming-secondary: 40 85% 60%;
+  --primary: 30 90% 66%;
+}
+
+[data-theme="cyberpunk"] {
+  --gaming-primary: 300 100% 50%;
+  --gaming-secondary: 180 100% 50%;
+  --primary: 300 100% 50%;
+  --accent: 180 100% 50%;
+}
+
+[data-theme="retro"] {
+  --gaming-primary: 60 100% 50%;
+  --gaming-secondary: 120 100% 30%;
+  --primary: 60 100% 50%;
+  --background: 0 0% 10%;
+}
+
+[data-theme="light"] {
+  --background: 0 0% 100%;
+  --foreground: 222 84% 5%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 84% 5%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 84% 5%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 84% 5%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222 84% 5%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 239 84% 67%;
+  --gaming-primary: 239 84% 67%;
+  --gaming-secondary: 258 90% 66%;
+  --gaming-dark: 0 0% 100%;
+  --gaming-surface: 210 40% 98%;
+  --gaming-border: 214 32% 91%;
 }
 
 .dark {
