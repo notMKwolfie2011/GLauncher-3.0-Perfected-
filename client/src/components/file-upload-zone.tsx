@@ -13,7 +13,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
   const { toast } = useToast();
 
   const validateFile = (file: File): boolean => {
-    const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed'];
+    const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
     const validExtensions = ['.html', '.htm', '.zip'];
     const maxSize = 50 * 1024 * 1024; // 50MB
 

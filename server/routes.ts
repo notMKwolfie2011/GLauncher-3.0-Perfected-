@@ -40,7 +40,7 @@ const upload = multer({
 });
 
 // Helper function to extract ZIP files and find main HTML file
-async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promise<{ htmlPath: string; originalName: string } | null> {
+async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promise<{ htmlPath: string; originalName: string; extractedFiles?: number; detectionMethod?: string; warnings?: string[] } | null> {
   return new Promise((resolve, reject) => {
     yauzl.open(zipPath, { lazyEntries: true }, (err, zipfile) => {
       if (err) {
@@ -108,16 +108,42 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
           return;
         }
 
-        // Find the main HTML file using common naming patterns
-        let mainHtml = htmlFiles.find(f => 
-          f.toLowerCase().includes('index.html') ||
-          f.toLowerCase().includes('main.html') ||
-          f.toLowerCase().includes('game.html') ||
-          f.toLowerCase().includes('client.html') ||
-          f.toLowerCase().includes('eaglercraft.html')
-        );
+        // Enhanced main HTML file detection with priority system
+        const priorityPatterns = [
+          /^index\.html?$/i,
+          /^main\.html?$/i,
+          /^game\.html?$/i,
+          /^client\.html?$/i,
+          /^eaglercraft\.html?$/i,
+          /^launcher\.html?$/i,
+          /^start\.html?$/i,
+          /^play\.html?$/i
+        ];
 
-        // If no obvious main file, use the first HTML file in root directory
+        let mainHtml = null;
+        
+        // First, look for exact matches in root directory
+        for (const pattern of priorityPatterns) {
+          mainHtml = htmlFiles.find(f => {
+            const fileName = f.split('/').pop() || '';
+            return pattern.test(fileName) && !f.includes('/');
+          });
+          if (mainHtml) break;
+        }
+
+        // If no exact match, look for files containing these keywords
+        if (!mainHtml) {
+          const keywordPatterns = ['index', 'main', 'game', 'client', 'eaglercraft', 'launcher'];
+          for (const keyword of keywordPatterns) {
+            mainHtml = htmlFiles.find(f => {
+              const fileName = f.split('/').pop() || '';
+              return fileName.toLowerCase().includes(keyword) && fileName.toLowerCase().endsWith('.html');
+            });
+            if (mainHtml) break;
+          }
+        }
+
+        // If still no main file, use the first HTML file in root directory
         if (!mainHtml) {
           mainHtml = htmlFiles.find(f => !f.includes('/')) || htmlFiles[0];
         }
@@ -125,7 +151,39 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
         const htmlPath = path.join(extractDir, mainHtml);
         const originalName = path.basename(mainHtml);
 
-        resolve({ htmlPath, originalName });
+        // Generate warnings based on file structure analysis
+        const warnings: string[] = [];
+        
+        // Check for common issues
+        if (htmlFiles.length > 5) {
+          warnings.push(`Found ${htmlFiles.length} HTML files - may indicate complex structure`);
+        }
+        
+        if (mainHtml.includes('/')) {
+          warnings.push('Main HTML file found in subdirectory - may affect relative paths');
+        }
+        
+        const hasAssets = allFiles.some(f => 
+          f.toLowerCase().includes('.js') || 
+          f.toLowerCase().includes('.css') || 
+          f.toLowerCase().includes('.png') ||
+          f.toLowerCase().includes('.jpg')
+        );
+        
+        if (!hasAssets) {
+          warnings.push('No common asset files detected - game may not function properly');
+        }
+
+        // Log detection results for debugging
+        console.log(`ZIP extraction: Found ${htmlFiles.length} HTML files, selected: ${mainHtml}`);
+
+        resolve({ 
+          htmlPath, 
+          originalName,
+          extractedFiles: allFiles.length,
+          detectionMethod: mainHtml === htmlFiles[0] ? 'fallback' : 'pattern-match',
+          warnings
+        });
       });
 
       zipfile.on("error", (err) => {
