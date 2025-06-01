@@ -1,3 +1,5 @@
+import logoPath from "@assets/Screenshot 2025-06-01 7.44.56 AM.png";
+
 interface AppHeaderProps {
   fileCount: number;
   onClearAll: () => void;
@@ -9,8 +11,12 @@ export default function AppHeader({ fileCount, onClearAll }: AppHeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 gaming-gradient rounded-lg flex items-center justify-center">
-              <i className="fas fa-gamepad text-white text-lg"></i>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img 
+                src={logoPath} 
+                alt="GLauncher Logo" 
+                className="w-10 h-10 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-50">GLauncher</h1>
