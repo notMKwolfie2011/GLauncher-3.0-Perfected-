@@ -65,7 +65,7 @@ export async function validateZipFile(zipPath: string): Promise<ZipValidationRes
     }
 
   } catch (error) {
-    result.errors.push(`Failed to validate ZIP file: ${error.message}`);
+    result.errors.push(`Failed to validate ZIP file: ${error instanceof Error ? error.message : 'Unknown error'}`);
     result.isValid = false;
   }
 
