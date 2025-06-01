@@ -213,7 +213,31 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
             title={currentFile.originalName}
             sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation"
             allowFullScreen
+            tabIndex={0}
+            onLoad={(e) => {
+              // Focus the iframe after loading to ensure keyboard input works
+              const iframe = e.target as HTMLIFrameElement;
+              iframe.focus();
+              
+              // Also try to focus the iframe content
+              try {
+                iframe.contentWindow?.focus();
+              } catch (error) {
+                console.log('Cannot focus iframe content due to CORS policy');
+              }
+            }}
+            onClick={(e) => {
+              // Ensure focus when clicked
+              const iframe = e.target as HTMLIFrameElement;
+              iframe.focus();
+            }}
           />
+          
+          {/* Game instructions overlay */}
+          <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
+            <i className="fas fa-mouse-pointer mr-2"></i>
+            Click game area to enable keyboard input
+          </div>
           
           {/* Fullscreen hint overlay */}
           {!isFullscreen && (
