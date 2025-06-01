@@ -16,27 +16,76 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
     setIframeKey(prev => prev + 1);
   };
 
-  const handleFullscreen = () => {
+  const handleFullscreen = async () => {
     const iframe = document.getElementById('game-iframe');
     if (iframe) {
-      if (!isFullscreen) {
-        iframe.requestFullscreen?.();
-        setIsFullscreen(true);
-      } else {
-        document.exitFullscreen?.();
-        setIsFullscreen(false);
+      try {
+        if (!isFullscreen) {
+          // Try different fullscreen methods for better browser compatibility
+          if (iframe.requestFullscreen) {
+            await iframe.requestFullscreen();
+          } else if ((iframe as any).webkitRequestFullscreen) {
+            await (iframe as any).webkitRequestFullscreen();
+          } else if ((iframe as any).mozRequestFullScreen) {
+            await (iframe as any).mozRequestFullScreen();
+          } else if ((iframe as any).msRequestFullscreen) {
+            await (iframe as any).msRequestFullscreen();
+          }
+        } else {
+          // Exit fullscreen with browser compatibility
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          } else if ((document as any).webkitExitFullscreen) {
+            await (document as any).webkitExitFullscreen();
+          } else if ((document as any).mozCancelFullScreen) {
+            await (document as any).mozCancelFullScreen();
+          } else if ((document as any).msExitFullscreen) {
+            await (document as any).msExitFullscreen();
+          }
+        }
+      } catch (error) {
+        console.error('Fullscreen error:', error);
       }
     }
   };
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const fullscreenElement = document.fullscreenElement || 
+                               (document as any).webkitFullscreenElement ||
+                               (document as any).mozFullScreenElement ||
+                               (document as any).msFullscreenElement;
+      setIsFullscreen(!!fullscreenElement);
     };
 
+    // Add event listeners for all browser types
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    // Keyboard shortcut for fullscreen (F11 alternative)
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F11' || (e.ctrlKey && e.key === 'Enter')) {
+        e.preventDefault();
+        handleFullscreen();
+      }
+      // ESC to exit fullscreen
+      if (e.key === 'Escape' && isFullscreen) {
+        handleFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [isFullscreen]);
 
   if (!currentFile) {
     return (
@@ -107,14 +156,19 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
               size="sm"
               className="p-2 text-slate-400 hover:text-slate-200"
               onClick={handleRefresh}
+              title="Refresh game"
             >
               <i className="fas fa-redo"></i>
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="p-2 text-slate-400 hover:text-slate-200"
+              className={`p-2 transition-colors ${isFullscreen 
+                ? 'text-purple-400 hover:text-purple-300' 
+                : 'text-slate-400 hover:text-slate-200'
+              }`}
               onClick={handleFullscreen}
+              title={isFullscreen ? 'Exit fullscreen (ESC)' : 'Enter fullscreen (F11 or Ctrl+Enter)'}
             >
               <i className={`fas fa-${isFullscreen ? 'compress' : 'expand'}`}></i>
             </Button>
@@ -123,6 +177,7 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
               size="sm"
               className="p-2 text-slate-400 hover:text-slate-200"
               onClick={onClose}
+              title="Close game"
             >
               <i className="fas fa-times"></i>
             </Button>
@@ -131,16 +186,25 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
       </div>
 
       {/* Player Area */}
-      <div className="flex-1 p-4">
-        <div className="w-full h-full bg-black rounded-lg overflow-hidden shadow-2xl border border-[hsl(var(--gaming-border))]">
+      <div className="flex-1 p-4 relative">
+        <div className="w-full h-full bg-black rounded-lg overflow-hidden shadow-2xl border border-[hsl(var(--gaming-border))] relative">
           <iframe
             id="game-iframe"
             key={iframeKey}
             src={`/api/files/${currentFile.id}/content`}
-            className="w-full h-full"
+            className="w-full h-full border-0"
             title={currentFile.originalName}
             sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation"
+            allowFullScreen
           />
+          
+          {/* Fullscreen hint overlay */}
+          {!isFullscreen && (
+            <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
+              <i className="fas fa-expand mr-2"></i>
+              Press F11 for fullscreen
+            </div>
+          )}
         </div>
       </div>
     </>
