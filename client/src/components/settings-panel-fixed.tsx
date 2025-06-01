@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import ThemeSharingModal from "./theme-sharing-modal";
+import ThemeCreatorModal from "./theme-creator-modal";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -20,7 +21,8 @@ interface GameSettings {
   audioVolume: number;
   autoSave: boolean;
   performanceMode: 'high' | 'balanced' | 'battery';
-  theme: 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'cyberpunk' | 'retro';
+  theme: 'dark' | 'light' | 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'cyberpunk' | 'retro' | 'custom';
+  customTheme?: any;
   showFPS: boolean;
   pauseOnBlur: boolean;
   mouseInvert: boolean;
@@ -64,6 +66,7 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const [settings, setSettings] = useState<GameSettings>(defaultSettings);
   const [isVisible, setIsVisible] = useState(false);
   const [showThemeSharing, setShowThemeSharing] = useState(false);
+  const [showThemeCreator, setShowThemeCreator] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -115,6 +118,23 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
     setSettings(defaultSettings);
     localStorage.removeItem('glauncher-settings');
   }, []);
+
+  const handleSaveCustomTheme = useCallback((customTheme: any) => {
+    // Apply the custom theme immediately
+    const newSettings = {
+      ...settings,
+      theme: 'custom' as const,
+      customTheme: customTheme
+    };
+    setSettings(newSettings);
+    
+    // Apply the custom theme colors
+    const root = document.documentElement;
+    Object.entries(customTheme.colors).forEach(([key, color]: [string, any]) => {
+      const cssVar = `--gaming-${key.toLowerCase()}`;
+      root.style.setProperty(cssVar, `${color.h} ${color.s}% ${color.l}%`);
+    });
+  }, [settings]);
 
   if (!isVisible) return null;
 
@@ -253,8 +273,19 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                     <SelectItem value="orange">Sunset Orange</SelectItem>
                     <SelectItem value="cyberpunk">Cyberpunk Neon</SelectItem>
                     <SelectItem value="retro">Retro Gaming</SelectItem>
+                    <SelectItem value="custom">Custom Theme</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowThemeCreator(true)}
+                  className="border-[hsl(var(--gaming-accent))]/50 text-[hsl(var(--gaming-accent))] hover:bg-[hsl(var(--gaming-accent))]/10"
+                >
+                  <i className="fas fa-paint-brush mr-2"></i>
+                  Create Theme
+                </Button>
               </div>
             </div>
           </div>
@@ -298,6 +329,12 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         isOpen={showThemeSharing}
         onClose={() => setShowThemeSharing(false)}
         currentSettings={settings}
+      />
+
+      <ThemeCreatorModal
+        isOpen={showThemeCreator}
+        onClose={() => setShowThemeCreator(false)}
+        onSave={handleSaveCustomTheme}
       />
     </div>
   );
