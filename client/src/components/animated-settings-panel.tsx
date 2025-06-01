@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import ThemeSharingModal from "./theme-sharing-modal";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -62,6 +63,7 @@ const defaultSettings: GameSettings = {
 export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const [settings, setSettings] = useState<GameSettings>(defaultSettings);
   const [isVisible, setIsVisible] = useState(false);
+  const [showThemeCreator, setShowThemeCreator] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -114,6 +116,16 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
     setSettings(defaultSettings);
   }, []);
 
+  const handleThemeSelect = useCallback((themeData: any) => {
+    if (themeData) {
+      Object.keys(themeData).forEach(key => {
+        if (key in settings) {
+          updateSetting(key as keyof GameSettings, themeData[key]);
+        }
+      });
+    }
+  }, [settings, updateSetting]);
+
   if (!isVisible && !isOpen) return null;
 
   return (
@@ -155,10 +167,17 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Graphics Settings */}
-          <div className={`transition-all duration-700 ease-out ${
-            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-          }`} style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}>
+          <Tabs defaultValue="settings" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="settings">Game Settings</TabsTrigger>
+              <TabsTrigger value="community">Community Themes</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="settings" className="space-y-6 mt-6">
+              {/* Graphics Settings */}
+              <div className={`transition-all duration-700 ease-out ${
+                isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+              }`} style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}>
             <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
               <i className="fas fa-desktop mr-2 text-blue-400"></i>
               Graphics
@@ -506,28 +525,44 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
 
           <Separator className="bg-[hsl(var(--gaming-border))]" />
 
-          {/* Action Buttons */}
-          <div className={`flex items-center justify-between pt-4 transition-all duration-700 ease-out ${
-            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-          }`} style={{ transitionDelay: isOpen ? '500ms' : '0ms' }}>
-            <Button
-              variant="outline"
-              onClick={resetSettings}
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10"
-            >
-              <i className="fas fa-undo mr-2"></i>
-              Reset to Defaults
-            </Button>
-            <Button
-              onClick={onClose}
-              className="bg-[hsl(var(--gaming-primary))] hover:bg-[hsl(var(--gaming-primary))]/80"
-            >
-              <i className="fas fa-check mr-2"></i>
-              Apply Settings
-            </Button>
-          </div>
+              {/* Action Buttons */}
+              <div className={`flex items-center justify-between pt-4 transition-all duration-700 ease-out ${
+                isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+              }`} style={{ transitionDelay: isOpen ? '500ms' : '0ms' }}>
+                <Button
+                  variant="outline"
+                  onClick={resetSettings}
+                  className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  <i className="fas fa-undo mr-2"></i>
+                  Reset to Defaults
+                </Button>
+                <Button
+                  onClick={onClose}
+                  className="bg-[hsl(var(--gaming-primary))] hover:bg-[hsl(var(--gaming-primary))]/80"
+                >
+                  <i className="fas fa-check mr-2"></i>
+                  Apply Settings
+                </Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="community" className="mt-6">
+              <CommunityThemesBrowser
+                onThemeSelect={handleThemeSelect}
+                onCreateTheme={() => setShowThemeCreator(true)}
+                currentTheme={settings}
+              />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
+
+      <ThemeCreator
+        isOpen={showThemeCreator}
+        onClose={() => setShowThemeCreator(false)}
+        currentSettings={settings}
+      />
     </div>
   );
 }
