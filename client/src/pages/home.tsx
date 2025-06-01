@@ -48,7 +48,7 @@ export default function Home() {
                 <span><i className="fas fa-files mr-2 text-[hsl(var(--gaming-secondary))]"></i>Uploaded Files</span>
                 {files && files.length > 0 && (
                   <button 
-                    onClick={clearAllFiles}
+                    onClick={() => clearAllFiles()}
                     className="text-xs text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-[hsl(var(--gaming-border))] transition-colors"
                   >
                     <i className="fas fa-trash-alt mr-1"></i>Clear All
