@@ -16,6 +16,10 @@ export const gameFiles = pgTable("game_files", {
   contentType: text("content_type").notNull(),
   filePath: text("file_path").notNull(),
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+  clientVersion: text("client_version"),
+  minecraftVersion: text("minecraft_version"),
+  clientType: text("client_type"),
+  compatibilityWarnings: text("compatibility_warnings").array(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

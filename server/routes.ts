@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import yauzl from "yauzl";
 import { promisify } from "util";
+import { detectClientVersion } from "./client-detector";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");
@@ -196,12 +197,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      // Detect client version and compatibility information
+      const detectionResult = await detectClientVersion(finalFilePath);
+
       const fileData = {
         name: path.basename(finalFilePath),
         originalName: finalOriginalName,
         size: fs.statSync(finalFilePath).size,
         contentType: finalContentType,
         filePath: finalFilePath,
+        clientVersion: detectionResult.clientVersion,
+        minecraftVersion: detectionResult.minecraftVersion,
+        clientType: detectionResult.clientType,
+        compatibilityWarnings: detectionResult.compatibilityWarnings,
       };
 
       const validatedData = insertGameFileSchema.parse(fileData);
