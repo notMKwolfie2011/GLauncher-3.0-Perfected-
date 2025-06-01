@@ -30,6 +30,15 @@
   --gaming-dark: 222 84% 5%;
   --gaming-surface: 217 33% 17%;
   --gaming-border: 217 33% 17%;
+  --animation-duration: 0.2s;
+}
+
+[data-theme="blue"] {
+  --gaming-primary: 210 90% 66%;
+}
+
+[data-theme="purple"] {
+  --gaming-primary: 280 90% 66%;
 }
 
 .dark {

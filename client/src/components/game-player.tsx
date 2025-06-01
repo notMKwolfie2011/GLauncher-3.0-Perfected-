@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import type { GameFile } from "@shared/schema";
 import ClientInfoBadge from "./client-info-badge";
+import SettingsPanel from "./settings-panel";
 
 interface GamePlayerProps {
   currentFile: GameFile | null;
@@ -12,6 +13,7 @@ interface GamePlayerProps {
 export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: GamePlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleRefresh = () => {
     setIframeKey(prev => prev + 1);
@@ -169,6 +171,15 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
             <Button
               variant="ghost"
               size="sm"
+              className="p-2 text-slate-400 hover:text-slate-200"
+              onClick={() => setShowSettings(true)}
+              title="Game settings"
+            >
+              <i className="fas fa-cog"></i>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               className={`p-2 transition-colors ${isFullscreen 
                 ? 'text-purple-400 hover:text-purple-300' 
                 : 'text-slate-400 hover:text-slate-200'
@@ -213,6 +224,12 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
           )}
         </div>
       </div>
+
+      {/* Settings Panel */}
+      <SettingsPanel 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
     </>
   );
 }
