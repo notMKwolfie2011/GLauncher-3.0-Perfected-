@@ -11,11 +11,11 @@ export default function AppHeader({ fileCount, onClearAll }: AppHeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 flex items-center justify-center rounded-lg overflow-hidden">
+            <div className="w-16 h-10 flex items-center justify-center rounded-lg overflow-hidden">
               <img 
                 src={logoPath} 
                 alt="GLauncher Logo" 
-                className="w-16 h-16 object-cover scale-125 -translate-x-1"
+                className="w-20 h-12 object-cover"
               />
             </div>
             <div>
