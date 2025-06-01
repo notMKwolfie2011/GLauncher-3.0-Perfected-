@@ -15,7 +15,7 @@ export default function AppHeader({ fileCount, onClearAll }: AppHeaderProps) {
               <img 
                 src={logoPath} 
                 alt="GLauncher Logo" 
-                className="w-12 h-12 object-cover scale-150"
+                className="w-16 h-16 object-cover scale-125 -translate-x-1"
               />
             </div>
             <div>
