@@ -46,7 +46,7 @@ const defaultSettings: GameSettings = {
   audioVolume: 80,
   autoSave: true,
   performanceMode: 'balanced',
-  theme: 'dark',
+  theme: 'purple',
   showFPS: false,
   pauseOnBlur: true,
   mouseInvert: false,
