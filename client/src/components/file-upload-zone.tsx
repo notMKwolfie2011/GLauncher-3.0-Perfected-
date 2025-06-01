@@ -71,6 +71,12 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
     fileInputRef.current?.click();
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileSelect(e.target.files);
+    // Reset the input so the same file can be selected again
+    e.target.value = '';
+  };
+
   return (
     <>
       <div
@@ -94,8 +100,13 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
             {isLoading ? 'Please wait...' : 'or click to browse'}
           </p>
           <Button
+            type="button"
             className="bg-[hsl(var(--gaming-primary))] hover:bg-[hsl(var(--gaming-primary))]/80 text-white"
             disabled={isLoading}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick();
+            }}
           >
             <i className="fas fa-folder-open mr-2"></i>
             Choose Files
@@ -109,7 +120,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
         type="file"
         className="hidden"
         accept=".html,.htm"
-        onChange={(e) => handleFileSelect(e.target.files)}
+        onChange={handleInputChange}
       />
     </>
   );

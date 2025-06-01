@@ -20,7 +20,17 @@ export function useFiles() {
       const formData = new FormData();
       formData.append("file", file);
       
-      const response = await apiRequest("POST", "/api/files/upload", formData);
+      // Use fetch directly for file upload instead of apiRequest
+      const response = await fetch("/api/files/upload", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "Upload failed" }));
+        throw new Error(errorData.message || `HTTP ${response.status}`);
+      }
+      
       return response.json();
     },
     onSuccess: (data) => {
