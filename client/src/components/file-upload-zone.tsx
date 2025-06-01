@@ -13,8 +13,8 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
   const { toast } = useToast();
 
   const validateFile = (file: File): boolean => {
-    const validTypes = ['text/html', 'application/html'];
-    const validExtensions = ['.html', '.htm'];
+    const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed'];
+    const validExtensions = ['.html', '.htm', '.zip'];
     const maxSize = 50 * 1024 * 1024; // 50MB
 
     if (file.size > maxSize) {
@@ -34,7 +34,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
     if (!hasValidType && !hasValidExtension) {
       toast({
         title: "Invalid file type",
-        description: `${file.name} is not a valid HTML file.`,
+        description: `${file.name} is not a valid file. Please upload HTML or ZIP files.`,
         variant: "destructive",
       });
       return false;
@@ -94,10 +94,10 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
         <div className="upload-content">
           <i className="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
           <p className="text-slate-300 font-medium mb-2">
-            {isLoading ? 'Processing...' : 'Drop HTML files here'}
+            {isLoading ? 'Processing...' : 'Drop HTML or ZIP files here'}
           </p>
           <p className="text-sm text-slate-400 mb-4">
-            {isLoading ? 'Please wait...' : 'or click to browse'}
+            {isLoading ? 'Extracting and processing...' : 'or click to browse'}
           </p>
           <Button
             type="button"
