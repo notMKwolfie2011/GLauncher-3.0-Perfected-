@@ -102,7 +102,7 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
               <div className="absolute inset-4 rounded-full bg-gradient-to-r from-purple-500/40 to-blue-500/40 animate-pulse delay-150"></div>
               
               {/* Center logo with glow effect */}
-              <div className="absolute inset-8 rounded-full gaming-gradient flex items-center justify-center shadow-2xl">
+              <div className="absolute inset-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-2xl">
                 <div className="text-4xl font-black text-white drop-shadow-lg">
                   G
                 </div>
