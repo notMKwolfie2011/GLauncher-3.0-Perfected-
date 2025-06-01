@@ -82,8 +82,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateThemeDownloads(id: number): Promise<void> {
+    const [theme] = await db.select().from(communityThemes).where(eq(communityThemes.id, id));
+    if (!theme) return;
+    
     await db.update(communityThemes)
-      .set({ downloads: db.select().from(communityThemes).where(eq(communityThemes.id, id)) })
+      .set({ downloads: (theme.downloads || 0) + 1 })
       .where(eq(communityThemes.id, id));
   }
 

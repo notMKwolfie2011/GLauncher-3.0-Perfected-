@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from "multer";
-import { insertGameFileSchema } from "@shared/schema";
+import { insertGameFileSchema, insertCommunityThemeSchema } from "@shared/schema";
 import { z } from "zod";
 import path from "path";
 import fs from "fs";
@@ -406,6 +406,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error clearing files:", error);
       res.status(500).json({ message: "Failed to clear files" });
+    }
+  });
+
+  // Community Themes API routes
+  app.get("/api/themes", async (req, res) => {
+    try {
+      const themes = await storage.getAllCommunityThemes();
+      res.json(themes);
+    } catch (error) {
+      console.error("Get themes error:", error);
+      res.status(500).json({ message: "Failed to fetch themes" });
+    }
+  });
+
+  app.get("/api/themes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const theme = await storage.getCommunityTheme(id);
+      
+      if (theme) {
+        res.json(theme);
+      } else {
+        res.status(404).json({ message: "Theme not found" });
+      }
+    } catch (error) {
+      console.error("Get theme error:", error);
+      res.status(500).json({ message: "Failed to fetch theme" });
+    }
+  });
+
+  app.post("/api/themes", async (req, res) => {
+    try {
+      const validatedData = insertCommunityThemeSchema.parse(req.body);
+      const theme = await storage.createCommunityTheme(validatedData);
+      res.status(201).json(theme);
+    } catch (error) {
+      console.error("Create theme error:", error);
+      res.status(400).json({ message: "Invalid theme data" });
+    }
+  });
+
+  app.post("/api/themes/:id/download", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.updateThemeDownloads(id);
+      res.json({ message: "Download count updated" });
+    } catch (error) {
+      console.error("Update downloads error:", error);
+      res.status(500).json({ message: "Failed to update downloads" });
+    }
+  });
+
+  app.post("/api/themes/:id/rate", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { rating } = req.body;
+      
+      if (rating < 1 || rating > 5) {
+        return res.status(400).json({ message: "Rating must be between 1 and 5" });
+      }
+      
+      await storage.rateTheme(id, rating);
+      res.json({ message: "Rating submitted" });
+    } catch (error) {
+      console.error("Rate theme error:", error);
+      res.status(500).json({ message: "Failed to submit rating" });
+    }
+  });
+
+  app.get("/api/themes/search", async (req, res) => {
+    try {
+      const query = req.query.q as string || "";
+      const themes = await storage.searchThemes(query);
+      res.json(themes);
+    } catch (error) {
+      console.error("Search themes error:", error);
+      res.status(500).json({ message: "Failed to search themes" });
     }
   });
 
