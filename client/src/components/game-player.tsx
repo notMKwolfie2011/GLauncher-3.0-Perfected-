@@ -73,10 +73,8 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
         e.preventDefault();
         handleFullscreen();
       }
-      // ESC to exit fullscreen
-      if (e.key === 'Escape' && isFullscreen) {
-        handleFullscreen();
-      }
+      // Removed ESC to exit fullscreen to prevent accidental exits during gameplay
+      // Players can use the fullscreen button instead
     };
 
     document.addEventListener('keydown', handleKeyPress);
