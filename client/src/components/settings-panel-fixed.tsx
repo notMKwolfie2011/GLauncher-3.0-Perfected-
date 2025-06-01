@@ -94,8 +94,17 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
   // Apply theme changes to document
   useEffect(() => {
-    applyTheme(settings.theme);
-  }, [settings.theme]);
+    if (settings.theme === 'custom' && settings.customTheme) {
+      // Apply custom theme
+      const root = document.documentElement;
+      Object.entries(settings.customTheme.colors).forEach(([key, color]: [string, any]) => {
+        const cssVar = `--gaming-${key.toLowerCase()}`;
+        root.style.setProperty(cssVar, `${color.h} ${color.s}% ${color.l}%`);
+      });
+    } else {
+      applyTheme(settings.theme);
+    }
+  }, [settings.theme, settings.customTheme]);
 
   // Handle panel visibility
   useEffect(() => {

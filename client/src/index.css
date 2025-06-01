@@ -24,12 +24,15 @@
   --ring: 239 84% 67%;
   --radius: 0.5rem;
   
-  /* Gaming colors */
-  --gaming-primary: 239 84% 67%;
-  --gaming-secondary: 258 90% 66%;
-  --gaming-dark: 222 84% 5%;
-  --gaming-surface: 217 33% 17%;
-  --gaming-border: 217 33% 17%;
+  /* Gaming colors - Purple Theme */
+  --gaming-primary: 280 100% 70%;
+  --gaming-secondary: 280 100% 80%;
+  --gaming-accent: 300 100% 70%;
+  --gaming-surface: 260 15% 8%;
+  --gaming-card: 258 20% 15%;
+  --gaming-border: 280 100% 70%;
+  --gaming-text: 285 25% 95%;
+  --gaming-dark: 260 15% 8%;
   --animation-duration: 0.2s;
 }
 
