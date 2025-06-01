@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -19,9 +19,20 @@ interface GameSettings {
   audioVolume: number;
   autoSave: boolean;
   performanceMode: 'high' | 'balanced' | 'battery';
-  theme: 'dark' | 'blue' | 'purple';
+  theme: 'dark' | 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'cyberpunk' | 'retro';
   showFPS: boolean;
   pauseOnBlur: boolean;
+  mouseInvert: boolean;
+  mouseSensitivity: number;
+  fullscreenMode: 'windowed' | 'fullscreen' | 'borderless';
+  renderDistance: number;
+  textureQuality: 'low' | 'medium' | 'high' | 'ultra';
+  shadows: boolean;
+  particles: 'minimal' | 'reduced' | 'normal' | 'enhanced';
+  uiScale: number;
+  chatEnabled: boolean;
+  notifications: boolean;
+  autoConnect: boolean;
 }
 
 const defaultSettings: GameSettings = {
@@ -34,7 +45,18 @@ const defaultSettings: GameSettings = {
   performanceMode: 'balanced',
   theme: 'dark',
   showFPS: false,
-  pauseOnBlur: true
+  pauseOnBlur: true,
+  mouseInvert: false,
+  mouseSensitivity: 50,
+  fullscreenMode: 'windowed',
+  renderDistance: 8,
+  textureQuality: 'high',
+  shadows: true,
+  particles: 'normal',
+  uiScale: 100,
+  chatEnabled: true,
+  notifications: true,
+  autoConnect: false,
 };
 
 export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
@@ -193,6 +215,52 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Texture Quality</label>
+                  <p className="text-sm text-slate-400">Higher quality uses more memory</p>
+                </div>
+                <Select
+                  value={settings.textureQuality}
+                  onValueChange={(value) => updateSetting('textureQuality', value as GameSettings['textureQuality'])}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="ultra">Ultra</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Shadows</label>
+                  <p className="text-sm text-slate-400">Realistic shadow rendering</p>
+                </div>
+                <Switch
+                  checked={settings.shadows}
+                  onCheckedChange={(checked) => updateSetting('shadows', checked)}
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-300 font-medium block mb-2">
+                  Render Distance: {settings.renderDistance} chunks
+                </label>
+                <Slider
+                  value={[settings.renderDistance]}
+                  onValueChange={([value]) => updateSetting('renderDistance', value)}
+                  max={16}
+                  min={2}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 
@@ -279,6 +347,119 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
                   onCheckedChange={(checked) => updateSetting('pauseOnBlur', checked)}
                 />
               </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Chat Enabled</label>
+                  <p className="text-sm text-slate-400">Enable in-game chat</p>
+                </div>
+                <Switch
+                  checked={settings.chatEnabled}
+                  onCheckedChange={(checked) => updateSetting('chatEnabled', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Notifications</label>
+                  <p className="text-sm text-slate-400">Show system notifications</p>
+                </div>
+                <Switch
+                  checked={settings.notifications}
+                  onCheckedChange={(checked) => updateSetting('notifications', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Auto-Connect</label>
+                  <p className="text-sm text-slate-400">Auto-connect to servers</p>
+                </div>
+                <Switch
+                  checked={settings.autoConnect}
+                  onCheckedChange={(checked) => updateSetting('autoConnect', checked)}
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-300 font-medium block mb-2">
+                  Mouse Sensitivity: {settings.mouseSensitivity}%
+                </label>
+                <Slider
+                  value={[settings.mouseSensitivity]}
+                  onValueChange={([value]) => updateSetting('mouseSensitivity', value)}
+                  max={200}
+                  min={10}
+                  step={5}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Invert Mouse</label>
+                  <p className="text-sm text-slate-400">Reverse mouse Y-axis</p>
+                </div>
+                <Switch
+                  checked={settings.mouseInvert}
+                  onCheckedChange={(checked) => updateSetting('mouseInvert', checked)}
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-300 font-medium block mb-2">
+                  UI Scale: {settings.uiScale}%
+                </label>
+                <Slider
+                  value={[settings.uiScale]}
+                  onValueChange={([value]) => updateSetting('uiScale', value)}
+                  max={150}
+                  min={75}
+                  step={5}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Display Mode</label>
+                  <p className="text-sm text-slate-400">Choose display preference</p>
+                </div>
+                <Select
+                  value={settings.fullscreenMode}
+                  onValueChange={(value) => updateSetting('fullscreenMode', value as GameSettings['fullscreenMode'])}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="windowed">Windowed</SelectItem>
+                    <SelectItem value="fullscreen">Fullscreen</SelectItem>
+                    <SelectItem value="borderless">Borderless</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-slate-300 font-medium">Particle Effects</label>
+                  <p className="text-sm text-slate-400">Visual particle density</p>
+                </div>
+                <Select
+                  value={settings.particles}
+                  onValueChange={(value) => updateSetting('particles', value as GameSettings['particles'])}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="minimal">Minimal</SelectItem>
+                    <SelectItem value="reduced">Reduced</SelectItem>
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="enhanced">Enhanced</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -299,15 +480,20 @@ export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanel
               </div>
               <Select
                 value={settings.theme}
-                onValueChange={(value: 'dark' | 'blue' | 'purple') => updateSetting('theme', value)}
+                onValueChange={(value) => updateSetting('theme', value as GameSettings['theme'])}
               >
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-36">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="blue">Ocean Blue</SelectItem>
-                  <SelectItem value="purple">Purple Haze</SelectItem>
+                  <SelectItem value="dark">🌙 Dark</SelectItem>
+                  <SelectItem value="blue">🌊 Ocean Blue</SelectItem>
+                  <SelectItem value="purple">🔮 Purple Magic</SelectItem>
+                  <SelectItem value="green">🌿 Forest Green</SelectItem>
+                  <SelectItem value="red">🔥 Fire Red</SelectItem>
+                  <SelectItem value="orange">🎃 Sunset Orange</SelectItem>
+                  <SelectItem value="cyberpunk">⚡ Cyberpunk</SelectItem>
+                  <SelectItem value="retro">🕹️ Retro Gaming</SelectItem>
                 </SelectContent>
               </Select>
             </div>
