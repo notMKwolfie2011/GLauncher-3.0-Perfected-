@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import type { GameFile } from "@shared/schema";
+import ClientInfoBadge from "./client-info-badge";
 
 interface FileListProps {
   files: GameFile[];
@@ -47,6 +48,9 @@ export default function FileList({ files, currentFile, onFileSelect, onFileDelet
               <p className="text-sm text-slate-400">
                 {formatFileSize(file.size)} • Uploaded {formatDistanceToNow(new Date(file.uploadedAt), { addSuffix: true })}
               </p>
+              <div className="mt-2">
+                <ClientInfoBadge file={file} />
+              </div>
             </div>
             <div className="flex items-center space-x-2 ml-2">
               <Button

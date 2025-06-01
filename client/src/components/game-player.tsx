@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import type { GameFile } from "@shared/schema";
+import ClientInfoBadge from "./client-info-badge";
 
 interface GamePlayerProps {
   currentFile: GameFile | null;
@@ -139,15 +140,20 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
       <div className="bg-[hsl(var(--gaming-surface))] border-b border-[hsl(var(--gaming-border))] p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h2 className="font-semibold text-slate-200">{currentFile.originalName}</h2>
-            <div className="flex items-center space-x-2">
-              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-medium">
-                <i className="fas fa-circle text-green-400 text-xs mr-1"></i>
-                Running
-              </span>
-              <span className="text-xs text-slate-400">
-                Loaded {new Date(currentFile.uploadedAt).toLocaleDateString()}
-              </span>
+            <div>
+              <h2 className="font-semibold text-slate-200">{currentFile.originalName}</h2>
+              <div className="flex items-center space-x-2 mt-1">
+                <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-medium">
+                  <i className="fas fa-circle text-green-400 text-xs mr-1"></i>
+                  Running
+                </span>
+                <span className="text-xs text-slate-400">
+                  Loaded {new Date(currentFile.uploadedAt).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="mt-2">
+                <ClientInfoBadge file={currentFile} showWarnings={true} />
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
