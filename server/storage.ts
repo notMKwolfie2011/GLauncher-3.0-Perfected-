@@ -1,4 +1,6 @@
 import { users, gameFiles, type User, type InsertUser, type GameFile, type InsertGameFile } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -11,60 +13,50 @@ export interface IStorage {
   deleteGameFile(id: number): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private gameFiles: Map<number, GameFile>;
-  private currentUserId: number;
-  private currentFileId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.gameFiles = new Map();
-    this.currentUserId = 1;
-    this.currentFileId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getAllGameFiles(): Promise<GameFile[]> {
-    return Array.from(this.gameFiles.values()).sort((a, b) => 
-      new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
-    );
+    const files = await db
+      .select()
+      .from(gameFiles)
+      .orderBy(desc(gameFiles.uploadedAt));
+    return files;
   }
 
   async getGameFile(id: number): Promise<GameFile | undefined> {
-    return this.gameFiles.get(id);
+    const [file] = await db.select().from(gameFiles).where(eq(gameFiles.id, id));
+    return file || undefined;
   }
 
   async createGameFile(insertFile: InsertGameFile): Promise<GameFile> {
-    const id = this.currentFileId++;
-    const file: GameFile = { 
-      ...insertFile, 
-      id, 
-      uploadedAt: new Date()
-    };
-    this.gameFiles.set(id, file);
+    const [file] = await db
+      .insert(gameFiles)
+      .values(insertFile)
+      .returning();
     return file;
   }
 
   async deleteGameFile(id: number): Promise<boolean> {
-    return this.gameFiles.delete(id);
+    const result = await db.delete(gameFiles).where(eq(gameFiles.id, id));
+    return result.rowCount > 0;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
