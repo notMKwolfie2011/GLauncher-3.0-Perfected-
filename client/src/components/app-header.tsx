@@ -1,7 +1,7 @@
 import logoPath from "@assets/Screenshot 2025-06-01 7.44.56 AM.png";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import SettingsPanel from "./settings-panel";
+import AnimatedSettingsPanel from "./animated-settings-panel";
 
 interface AppHeaderProps {
   fileCount: number;
@@ -47,7 +47,7 @@ export default function AppHeader({ fileCount, onClearAll }: AppHeaderProps) {
       </div>
       </header>
 
-      <SettingsPanel 
+      <AnimatedSettingsPanel 
         isOpen={showSettings} 
         onClose={() => setShowSettings(false)} 
       />

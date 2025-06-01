@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import type { GameFile } from "@shared/schema";
 import ClientInfoBadge from "./client-info-badge";
-import SettingsPanel from "./settings-panel";
+import AnimatedSettingsPanel from "./animated-settings-panel";
 
 interface GamePlayerProps {
   currentFile: GameFile | null;
@@ -226,7 +226,7 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
       </div>
 
       {/* Settings Panel */}
-      <SettingsPanel 
+      <AnimatedSettingsPanel 
         isOpen={showSettings} 
         onClose={() => setShowSettings(false)} 
       />
