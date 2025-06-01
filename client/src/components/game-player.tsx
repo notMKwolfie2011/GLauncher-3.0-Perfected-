@@ -43,19 +43,40 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
       <div className="flex-1 p-4">
         <div className="w-full h-full bg-black rounded-lg overflow-hidden shadow-2xl border border-[hsl(var(--gaming-border))] flex items-center justify-center">
           <div className="text-center max-w-md">
-            <div className="w-24 h-24 gaming-gradient rounded-full flex items-center justify-center mx-auto mb-6">
-              <i className="fas fa-gamepad text-3xl text-white"></i>
+            <div className="relative w-32 h-32 mx-auto mb-8">
+              {/* Animated background rings */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600/20 to-blue-600/20 animate-pulse"></div>
+              <div className="absolute inset-2 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 animate-pulse delay-75"></div>
+              <div className="absolute inset-4 rounded-full bg-gradient-to-r from-purple-500/40 to-blue-500/40 animate-pulse delay-150"></div>
+              
+              {/* Center logo with glow effect */}
+              <div className="absolute inset-8 rounded-full gaming-gradient flex items-center justify-center shadow-2xl">
+                <div className="text-4xl font-black text-white drop-shadow-lg">
+                  G
+                </div>
+              </div>
+              
+              {/* Floating particles */}
+              <div className="absolute top-4 left-6 w-2 h-2 bg-purple-400 rounded-full animate-bounce delay-300"></div>
+              <div className="absolute top-8 right-4 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce delay-500"></div>
+              <div className="absolute bottom-6 left-8 w-1 h-1 bg-cyan-400 rounded-full animate-bounce delay-700"></div>
+              <div className="absolute bottom-4 right-6 w-2 h-2 bg-violet-400 rounded-full animate-bounce delay-1000"></div>
             </div>
-            <h3 className="text-2xl font-bold text-slate-200 mb-4">Ready to Play</h3>
-            <p className="text-slate-400 mb-6">
-              Upload an Eaglercraft HTML client file to start playing. Your games will run directly in your browser with full functionality.
+            
+            <h3 className="text-3xl font-bold text-slate-200 mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Ready to Launch
+            </h3>
+            <p className="text-slate-400 mb-8 leading-relaxed">
+              Upload your HTML client file to start your gaming experience. 
+              <br />
+              <span className="text-purple-400 font-medium">Powered by GLauncher</span>
             </p>
             <Button
               onClick={onTriggerUpload}
-              className="bg-[hsl(var(--gaming-primary))] hover:bg-[hsl(var(--gaming-primary))]/80 text-white"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
             >
-              <i className="fas fa-upload mr-2"></i>
-              Upload Your First Game
+              <i className="fas fa-rocket mr-3"></i>
+              Launch Your Game
             </Button>
           </div>
         </div>
