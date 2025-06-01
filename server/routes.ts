@@ -9,6 +9,7 @@ import fs from "fs";
 import yauzl from "yauzl";
 import { promisify } from "util";
 import { detectClientVersion } from "./client-detector";
+import { validateZipFile, sanitizeFileName, isPathSafe } from "./zip-validator";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");
@@ -40,7 +41,15 @@ const upload = multer({
 });
 
 // Helper function to extract ZIP files and find main HTML file
-async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promise<{ htmlPath: string; originalName: string; extractedFiles?: number; detectionMethod?: string; warnings?: string[] } | null> {
+async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promise<{ 
+  htmlPath: string; 
+  originalName: string; 
+  extractedFiles?: number; 
+  detectionMethod?: string; 
+  warnings?: string[];
+  fileTypes?: Record<string, number>;
+  structure?: string[];
+} | null> {
   return new Promise((resolve, reject) => {
     yauzl.open(zipPath, { lazyEntries: true }, (err, zipfile) => {
       if (err) {
@@ -163,16 +172,45 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
           warnings.push('Main HTML file found in subdirectory - may affect relative paths');
         }
         
+        // Analyze file types for better insights
+        const fileTypes: Record<string, number> = {};
+        allFiles.forEach(f => {
+          const ext = f.split('.').pop()?.toLowerCase() || 'unknown';
+          fileTypes[ext] = (fileTypes[ext] || 0) + 1;
+        });
+
         const hasAssets = allFiles.some(f => 
           f.toLowerCase().includes('.js') || 
           f.toLowerCase().includes('.css') || 
           f.toLowerCase().includes('.png') ||
-          f.toLowerCase().includes('.jpg')
+          f.toLowerCase().includes('.jpg') ||
+          f.toLowerCase().includes('.gif') ||
+          f.toLowerCase().includes('.ico')
         );
         
         if (!hasAssets) {
           warnings.push('No common asset files detected - game may not function properly');
         }
+
+        // Check for potential Eaglercraft-specific indicators
+        const hasEaglerAssets = allFiles.some(f => 
+          f.toLowerCase().includes('eagler') ||
+          f.toLowerCase().includes('classes.js') ||
+          f.toLowerCase().includes('assets/minecraft')
+        );
+
+        if (hasEaglerAssets) {
+          warnings.unshift('Eaglercraft client detected - optimized loading enabled');
+        }
+
+        // Additional structure warnings
+        const nestedLevel = Math.max(...allFiles.map(f => f.split('/').length - 1));
+        if (nestedLevel > 3) {
+          warnings.push(`Deep directory structure (${nestedLevel} levels) - may cause loading issues`);
+        }
+
+        // Clear timeout on successful completion
+        clearTimeout(timeout);
 
         // Log detection results for debugging
         console.log(`ZIP extraction: Found ${htmlFiles.length} HTML files, selected: ${mainHtml}`);
@@ -182,13 +220,21 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
           originalName,
           extractedFiles: allFiles.length,
           detectionMethod: mainHtml === htmlFiles[0] ? 'fallback' : 'pattern-match',
-          warnings
+          warnings,
+          fileTypes,
+          structure: allFiles.slice(0, 20) // First 20 files for structure preview
         });
       });
 
       zipfile.on("error", (err) => {
-        reject(err);
+        console.error('ZIP extraction error:', err);
+        reject(new Error(`Failed to extract ZIP file: ${err.message}`));
       });
+
+      // Add timeout for extraction process
+      const timeout = setTimeout(() => {
+        reject(new Error('ZIP extraction timed out after 30 seconds'));
+      }, 30000);
     });
   });
 }
