@@ -11,12 +11,6 @@ interface SettingsPanelProps {
   onClose: () => void;
 }
 
-interface AnimatedSectionProps {
-  children: React.ReactNode;
-  delay?: number;
-  isVisible: boolean;
-}
-
 interface GameSettings {
   antiAliasing: boolean;
   vsync: boolean;
@@ -43,26 +37,9 @@ const defaultSettings: GameSettings = {
   pauseOnBlur: true
 };
 
-// Animated section component for staggered animations
-function AnimatedSection({ children, delay = 0, isVisible }: AnimatedSectionProps) {
-  return (
-    <div 
-      className={`transform transition-all duration-700 ease-out ${
-        isVisible 
-          ? 'translate-x-0 opacity-100' 
-          : 'translate-x-4 opacity-0'
-      }`}
-      style={{ 
-        transitionDelay: isVisible ? `${delay}ms` : '0ms'
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
+export default function AnimatedSettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const [settings, setSettings] = useState<GameSettings>(defaultSettings);
+  const [isVisible, setIsVisible] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -75,6 +52,16 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       }
     }
   }, []);
+
+  // Handle animation state
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+    } else {
+      const timer = setTimeout(() => setIsVisible(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   // Save settings to localStorage whenever they change
   useEffect(() => {
@@ -101,7 +88,7 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
     setSettings(defaultSettings);
   };
 
-  if (!isOpen) return null;
+  if (!isVisible && !isOpen) return null;
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
@@ -117,13 +104,15 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       
       {/* Animated settings panel */}
       <Card className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[hsl(var(--gaming-surface))] border-[hsl(var(--gaming-border))] 
-        transform transition-all duration-500 ease-out ${
+        shadow-2xl transform transition-all duration-500 ease-out ${
           isOpen 
             ? 'translate-y-0 scale-100 opacity-100' 
             : 'translate-y-8 scale-95 opacity-0'
         }`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-xl font-bold text-slate-200 flex items-center">
+          <CardTitle className={`text-xl font-bold text-slate-200 flex items-center transition-all duration-700 ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`}>
             <i className="fas fa-cog mr-2 text-[hsl(var(--gaming-primary))]"></i>
             Game Settings
           </CardTitle>
@@ -131,7 +120,9 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200"
+            className={`text-slate-400 hover:text-slate-200 transition-all duration-700 ${
+              isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+            }`}
           >
             <i className="fas fa-times"></i>
           </Button>
@@ -139,12 +130,13 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         
         <CardContent className="space-y-6">
           {/* Graphics Settings */}
-          <AnimatedSection delay={100} isVisible={isOpen}>
-            <div>
-              <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
-                <i className="fas fa-desktop mr-2 text-blue-400"></i>
-                Graphics
-              </h3>
+          <div className={`transition-all duration-700 ease-out ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`} style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}>
+            <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
+              <i className="fas fa-desktop mr-2 text-blue-400"></i>
+              Graphics
+            </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -202,14 +194,14 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 </Select>
               </div>
             </div>
-            </div>
-          </AnimatedSection>
+          </div>
 
           <Separator className="bg-[hsl(var(--gaming-border))]" />
 
           {/* Audio Settings */}
-          <AnimatedSection delay={200} isVisible={isOpen}>
-            <div>
+          <div className={`transition-all duration-700 ease-out ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`} style={{ transitionDelay: isOpen ? '200ms' : '0ms' }}>
             <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
               <i className="fas fa-volume-up mr-2 text-green-400"></i>
               Audio
@@ -242,14 +234,14 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 </div>
               )}
             </div>
-            </div>
-          </AnimatedSection>
+          </div>
 
           <Separator className="bg-[hsl(var(--gaming-border))]" />
 
           {/* Gameplay Settings */}
-          <AnimatedSection delay={300} isVisible={isOpen}>
-            <div>
+          <div className={`transition-all duration-700 ease-out ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`} style={{ transitionDelay: isOpen ? '300ms' : '0ms' }}>
             <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
               <i className="fas fa-gamepad mr-2 text-purple-400"></i>
               Gameplay
@@ -288,14 +280,14 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 />
               </div>
             </div>
-            </div>
-          </AnimatedSection>
+          </div>
 
           <Separator className="bg-[hsl(var(--gaming-border))]" />
 
           {/* Theme Settings */}
-          <AnimatedSection delay={400} isVisible={isOpen}>
-            <div>
+          <div className={`transition-all duration-700 ease-out ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`} style={{ transitionDelay: isOpen ? '400ms' : '0ms' }}>
             <h3 className="text-lg font-semibold text-slate-300 mb-3 flex items-center">
               <i className="fas fa-palette mr-2 text-pink-400"></i>
               Appearance
@@ -319,14 +311,14 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 </SelectContent>
               </Select>
             </div>
-            </div>
-          </AnimatedSection>
+          </div>
 
           <Separator className="bg-[hsl(var(--gaming-border))]" />
 
           {/* Action Buttons */}
-          <AnimatedSection delay={500} isVisible={isOpen}>
-            <div className="flex items-center justify-between pt-4">
+          <div className={`flex items-center justify-between pt-4 transition-all duration-700 ease-out ${
+            isOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`} style={{ transitionDelay: isOpen ? '500ms' : '0ms' }}>
             <Button
               variant="outline"
               onClick={resetSettings}
@@ -342,8 +334,7 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               <i className="fas fa-check mr-2"></i>
               Apply Settings
             </Button>
-            </div>
-          </AnimatedSection>
+          </div>
         </CardContent>
       </Card>
     </div>
