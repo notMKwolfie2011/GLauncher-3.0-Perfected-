@@ -174,7 +174,7 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
                 : 'text-slate-400 hover:text-slate-200'
               }`}
               onClick={handleFullscreen}
-              title={isFullscreen ? 'Exit fullscreen (ESC)' : 'Enter fullscreen (F11 or Ctrl+Enter)'}
+              title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             >
               <i className={`fas fa-${isFullscreen ? 'compress' : 'expand'}`}></i>
             </Button>
