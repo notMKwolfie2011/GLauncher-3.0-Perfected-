@@ -13,7 +13,7 @@ export default function AppHeader({ fileCount, onClearAll }: AppHeaderProps) {
               <i className="fas fa-gamepad text-white text-lg"></i>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-50">Eaglercraft Player</h1>
+              <h1 className="text-xl font-bold text-slate-50">GLauncher</h1>
               <p className="text-xs text-slate-400">Upload & Play HTML Clients</p>
             </div>
           </div>
