@@ -3,11 +3,14 @@ import AppHeader from "@/components/app-header";
 import FileUploadZone from "@/components/file-upload-zone";
 import FileList from "@/components/file-list";
 import GamePlayer from "@/components/game-player";
+import SettingsPanel from "@/components/settings-panel-fixed";
 import { useFiles } from "@/hooks/use-files";
+import { Button } from "@/components/ui/button";
 import type { GameFile } from "@shared/schema";
 
 export default function Home() {
   const [currentFile, setCurrentFile] = useState<GameFile | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
   const { files, isLoading, uploadFile, deleteFile, clearAllFiles } = useFiles();
 
   const handleFileSelect = (file: GameFile) => {
@@ -27,10 +30,21 @@ export default function Home() {
         <aside className="w-80 bg-[hsl(var(--gaming-surface))] border-r border-[hsl(var(--gaming-border))] flex flex-col overflow-hidden">
           {/* Upload Section */}
           <div className="p-6 border-b border-[hsl(var(--gaming-border))]">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
-              <i className="fas fa-upload mr-2 text-[hsl(var(--gaming-primary))]"></i>
-              Upload Client
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold flex items-center">
+                <i className="fas fa-upload mr-2 text-[hsl(var(--gaming-primary))]"></i>
+                Upload Client
+              </h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettings(true)}
+                className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+              >
+                <i className="fas fa-cog mr-2"></i>
+                Settings
+              </Button>
+            </div>
             
             <FileUploadZone onFileUpload={uploadFile} isLoading={isLoading} />
             
@@ -76,6 +90,11 @@ export default function Home() {
           />
         </main>
       </div>
+
+      <SettingsPanel 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
     </div>
   );
 }
