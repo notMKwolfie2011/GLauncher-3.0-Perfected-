@@ -277,14 +277,14 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-3">
                 <Button
                   variant="outline"
                   onClick={() => setShowThemeCreator(true)}
-                  className="border-[hsl(var(--gaming-accent))]/50 text-[hsl(var(--gaming-accent))] hover:bg-[hsl(var(--gaming-accent))]/10"
+                  className="border-[hsl(var(--gaming-accent))]/50 text-[hsl(var(--gaming-accent))] hover:bg-[hsl(var(--gaming-accent))]/10 flex-1"
                 >
                   <i className="fas fa-paint-brush mr-2"></i>
-                  Create Theme
+                  Create Custom Theme
                 </Button>
               </div>
             </div>
