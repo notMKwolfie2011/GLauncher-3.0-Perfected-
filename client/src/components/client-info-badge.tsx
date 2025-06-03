@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { GameFile } from "@shared/schema";
+import { useState } from "react";
 
 interface ClientInfoBadgeProps {
   file: GameFile;
@@ -9,9 +10,11 @@ interface ClientInfoBadgeProps {
 }
 
 export default function ClientInfoBadge({ file, showWarnings = false }: ClientInfoBadgeProps) {
+  const [dismissedWarnings, setDismissedWarnings] = useState<Set<number>>(new Set());
+
   const getClientTypeColor = (clientType?: string) => {
     if (!clientType) return "secondary";
-    
+
     const type = clientType.toLowerCase();
     if (type.includes("1.8")) return "default";
     if (type.includes("1.5")) return "outline";
@@ -22,7 +25,7 @@ export default function ClientInfoBadge({ file, showWarnings = false }: ClientIn
 
   const getVersionIcon = (clientType?: string) => {
     if (!clientType) return "fas fa-question-circle";
-    
+
     const type = clientType.toLowerCase();
     if (type.includes("1.8")) return "fas fa-gem";
     if (type.includes("1.5")) return "fas fa-cube";
@@ -32,6 +35,10 @@ export default function ClientInfoBadge({ file, showWarnings = false }: ClientIn
     if (type.includes("precision")) return "fas fa-crosshairs";
     if (type.includes("eaglerx")) return "fas fa-rocket";
     return "fas fa-gamepad";
+  };
+
+  const handleDismissWarning = (index: number) => {
+    setDismissedWarnings(prev => new Set([...prev, index]));
   };
 
   return (
@@ -76,14 +83,25 @@ export default function ClientInfoBadge({ file, showWarnings = false }: ClientIn
 
       {showWarnings && file.compatibilityWarnings && file.compatibilityWarnings.length > 0 && (
         <div className="space-y-1">
-          {file.compatibilityWarnings.map((warning, index) => (
-            <Alert key={index} className="py-2 border-yellow-500/20 bg-yellow-500/5">
-              <i className="fas fa-exclamation-triangle text-yellow-500 text-sm"></i>
-              <AlertDescription className="text-xs text-yellow-600 dark:text-yellow-400 ml-2">
-                {warning}
-              </AlertDescription>
-            </Alert>
-          ))}
+          {file.compatibilityWarnings.map((warning, index) => {
+            if (dismissedWarnings.has(index)) {
+              return null;
+            }
+
+            return (
+              <Alert key={index} className="py-2 border-yellow-500/20 bg-yellow-500/5 flex items-center justify-between">
+                <div className="flex items-center">
+                  <i className="fas fa-exclamation-triangle text-yellow-500 text-sm"></i>
+                  <AlertDescription className="text-xs text-yellow-600 dark:text-yellow-400 ml-2">
+                    {warning}
+                  </AlertDescription>
+                </div>
+                <button onClick={() => handleDismissWarning(index)} className="hover:text-yellow-700 dark:hover:text-yellow-300">
+                  <i className="fas fa-times"></i>
+                </button>
+              </Alert>
+            );
+          })}
         </div>
       )}
     </div>

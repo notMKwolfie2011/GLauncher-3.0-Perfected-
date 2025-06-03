@@ -24,9 +24,9 @@ export async function validateZipFile(zipPath: string): Promise<ZipValidationRes
     result.estimatedSize = stats.size;
 
     // Basic size validation
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    const maxSize = 80 * 1024 * 1024; // 80MB
     if (stats.size > maxSize) {
-      result.errors.push(`File size ${(stats.size / 1024 / 1024).toFixed(1)}MB exceeds maximum allowed size of 50MB`);
+      result.errors.push(`File size ${(stats.size / 1024 / 1024).toFixed(1)}MB exceeds maximum allowed size of 80MB`);
       result.isValid = false;
     }
 
