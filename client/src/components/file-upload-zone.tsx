@@ -15,12 +15,12 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
   const validateFile = (file: File): boolean => {
     const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
     const validExtensions = ['.html', '.htm', '.zip'];
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    const maxSize = 80 * 1024 * 1024; // 80MB
 
     if (file.size > maxSize) {
       toast({
         title: "File too large",
-        description: `${file.name} is too large. Maximum size is 50MB.`,
+        description: `${file.name} is too large. Maximum size is 80MB.`,
         variant: "destructive",
       });
       return false;
@@ -113,7 +113,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
           </Button>
         </div>
       </div>
-      
+
       <input
         id="file-input"
         ref={fileInputRef}
