@@ -20,7 +20,7 @@ if (!fs.existsSync(uploadDir)) {
 const upload = multer({
   dest: uploadDir,
   limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB limit
+    fileSize: 80 * 1024 * 1024, // 80MB limit
   },
   fileFilter: (req, file, cb) => {
     // Accept HTML files and ZIP files
@@ -326,7 +326,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(400).json({ message: "Invalid file data", errors: error.errors });
       } else if (error instanceof multer.MulterError) {
         if (error.code === 'LIMIT_FILE_SIZE') {
-          res.status(400).json({ message: "File too large. Maximum size is 50MB." });
+          res.status(400).json({ message: "File too large. Maximum size is 80MB." });
         } else {
           res.status(400).json({ message: error.message });
         }

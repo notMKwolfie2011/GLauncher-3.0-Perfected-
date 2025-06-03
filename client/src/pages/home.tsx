@@ -49,7 +49,7 @@ export default function Home() {
             <FileUploadZone onFileUpload={uploadFile} isLoading={isLoading} />
             
             <div className="mt-4 text-xs text-slate-400">
-              <p><i className="fas fa-info-circle mr-1"></i> Supports HTML and ZIP files up to 50MB</p>
+              <p><i className="fas fa-info-circle mr-1"></i> Supports HTML and ZIP files up to 80MB</p>
               <p><i className="fas fa-magic mr-1"></i> ZIP files are auto-extracted with main HTML detection</p>
               <p><i className="fas fa-shield-alt mr-1"></i> Files are processed locally</p>
             </div>
