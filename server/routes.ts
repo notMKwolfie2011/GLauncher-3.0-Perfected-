@@ -47,9 +47,11 @@ const upload = multer({
   }
 });
 
-// Helper function to extract ZIP files and find main HTML file
-async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promise<{ 
-  htmlPath: string; 
+// Helper function to extract ZIP files and analyze contents
+async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string): Promise<{ 
+  type: 'html' | 'jar';
+  htmlPath?: string; 
+  jarFiles?: string[];
   originalName: string; 
   extractedFiles?: number; 
   detectionMethod?: string; 
@@ -70,6 +72,7 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
       }
 
       const htmlFiles: string[] = [];
+      const jarFiles: string[] = [];
       const allFiles: string[] = [];
 
       zipfile.readEntry();
@@ -84,9 +87,11 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
           return;
         }
 
-        // Check if it's an HTML file
+        // Check file types
         if (fileName.toLowerCase().endsWith('.html') || fileName.toLowerCase().endsWith('.htm')) {
           htmlFiles.push(fileName);
+        } else if (fileName.toLowerCase().endsWith('.jar')) {
+          jarFiles.push(fileName);
         }
 
         // Extract all files
@@ -119,53 +124,64 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
       });
 
       zipfile.on("end", () => {
-        if (htmlFiles.length === 0) {
-          reject(new Error('No HTML files found in ZIP archive'));
-          return;
-        }
+        // Determine client type based on extracted files
+        let clientType: 'html' | 'jar' | null = null;
+        let mainFile = null;
+        let originalName = '';
 
-        // Enhanced main HTML file detection with priority system
-        const priorityPatterns = [
-          /^index\.html?$/i,
-          /^main\.html?$/i,
-          /^game\.html?$/i,
-          /^client\.html?$/i,
-          /^eaglercraft\.html?$/i,
-          /^launcher\.html?$/i,
-          /^start\.html?$/i,
-          /^play\.html?$/i
-        ];
+        if (htmlFiles.length > 0) {
+          clientType = 'html';
+          
+          // Enhanced main HTML file detection with priority system
+          const priorityPatterns = [
+            /^index\.html?$/i,
+            /^main\.html?$/i,
+            /^game\.html?$/i,
+            /^client\.html?$/i,
+            /^eaglercraft\.html?$/i,
+            /^launcher\.html?$/i,
+            /^start\.html?$/i,
+            /^play\.html?$/i
+          ];
 
-        let mainHtml = null;
+          let mainHtml = null;
 
-        // First, look for exact matches in root directory
-        for (const pattern of priorityPatterns) {
-          mainHtml = htmlFiles.find(f => {
-            const fileName = f.split('/').pop() || '';
-            return pattern.test(fileName) && !f.includes('/');
-          });
-          if (mainHtml) break;
-        }
-
-        // If no exact match, look for files containing these keywords
-        if (!mainHtml) {
-          const keywordPatterns = ['index', 'main', 'game', 'client', 'eaglercraft', 'launcher'];
-          for (const keyword of keywordPatterns) {
+          // First, look for exact matches in root directory
+          for (const pattern of priorityPatterns) {
             mainHtml = htmlFiles.find(f => {
               const fileName = f.split('/').pop() || '';
-              return fileName.toLowerCase().includes(keyword) && fileName.toLowerCase().endsWith('.html');
+              return pattern.test(fileName) && !f.includes('/');
             });
             if (mainHtml) break;
           }
-        }
 
-        // If still no main file, use the first HTML file in root directory
-        if (!mainHtml) {
-          mainHtml = htmlFiles.find(f => !f.includes('/')) || htmlFiles[0];
-        }
+          // If no exact match, look for files containing these keywords
+          if (!mainHtml) {
+            const keywordPatterns = ['index', 'main', 'game', 'client', 'eaglercraft', 'launcher'];
+            for (const keyword of keywordPatterns) {
+              mainHtml = htmlFiles.find(f => {
+                const fileName = f.split('/').pop() || '';
+                return fileName.toLowerCase().includes(keyword) && fileName.toLowerCase().endsWith('.html');
+              });
+              if (mainHtml) break;
+            }
+          }
 
-        const htmlPath = path.join(extractDir, mainHtml);
-        const originalName = path.basename(mainHtml);
+          // If still no main file, use the first HTML file in root directory
+          if (!mainHtml) {
+            mainHtml = htmlFiles.find(f => !f.includes('/')) || htmlFiles[0];
+          }
+
+          mainFile = path.join(extractDir, mainHtml);
+          originalName = path.basename(mainHtml);
+        } else if (jarFiles.length > 0) {
+          clientType = 'jar';
+          // For JAR clients, use the ZIP name as the original name
+          originalName = path.basename(zipPath, '.zip');
+        } else {
+          reject(new Error('No supported files (HTML or JAR) found in ZIP archive'));
+          return;
+        }
 
         // Generate warnings based on file structure analysis
         const warnings: string[] = [];
@@ -222,15 +238,24 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
         // Log detection results for debugging
         console.log(`ZIP extraction: Found ${htmlFiles.length} HTML files, selected: ${mainHtml}`);
 
-        resolve({ 
-          htmlPath, 
+        const result = {
+          type: clientType as 'html' | 'jar',
           originalName,
           extractedFiles: allFiles.length,
-          detectionMethod: mainHtml === htmlFiles[0] ? 'fallback' : 'pattern-match',
           warnings,
           fileTypes,
           structure: allFiles.slice(0, 20) // First 20 files for structure preview
-        });
+        };
+
+        if (clientType === 'html') {
+          (result as any).htmlPath = mainFile;
+          (result as any).detectionMethod = mainFile === htmlFiles[0] ? 'fallback' : 'pattern-match';
+        } else if (clientType === 'jar') {
+          (result as any).jarFiles = jarFiles;
+          (result as any).detectionMethod = 'jar-detected';
+        }
+
+        resolve(result);
       });
 
       zipfile.on("error", (err) => {
@@ -287,20 +312,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const extractDir = path.join(uploadDir, `extracted_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
           fs.mkdirSync(extractDir, { recursive: true });
 
-          // Extract ZIP and find main HTML file
-          const result = await extractZipAndFindHtml(req.file.path, extractDir);
+          // Extract ZIP and analyze contents
+          const result = await extractZipAndAnalyzeContents(req.file.path, extractDir);
 
           if (!result) {
             // Clean up
             fs.rmSync(extractDir, { recursive: true, force: true });
             fs.unlinkSync(req.file.path);
-            return res.status(400).json({ message: "No HTML files found in ZIP archive" });
+            return res.status(400).json({ message: "No supported files found in ZIP archive" });
           }
 
-          // Update file data to point to extracted HTML file
-          finalFilePath = result.htmlPath;
-          finalOriginalName = result.originalName;
-          finalContentType = 'text/html';
+          // Update file data based on extracted content type
+          if (result.type === 'html') {
+            finalFilePath = result.htmlPath!;
+            finalOriginalName = result.originalName;
+            finalContentType = 'text/html';
+          } else if (result.type === 'jar') {
+            // For JAR clients, keep ZIP structure but mark as JAR type
+            finalFilePath = extractDir; // Store directory path for JAR clients
+            finalOriginalName = req.file.originalname;
+            finalContentType = 'application/java-archive';
+          }
 
           // Clean up original ZIP file
           fs.unlinkSync(req.file.path);
@@ -310,7 +342,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Clean up on error
           fs.unlinkSync(req.file.path);
           return res.status(400).json({ 
-            message: "Failed to extract ZIP file. Please ensure it contains valid HTML files." 
+            message: "Failed to extract ZIP file. Please ensure it contains valid game files." 
           });
         }
       }
@@ -353,14 +385,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Download individual files from extracted archives
   app.get('/api/files/:id/download/:filename', async (req, res) => {
     try {
-      const id = req.params.id;
+      const fileId = parseInt(req.params.id);
       const filename = decodeURIComponent(req.params.filename);
 
-      const extractedPath = path.join(uploadDir, `extracted_${id}`);
-      const filePath = path.join(extractedPath, filename);
+      const file = await storage.getGameFile(fileId);
+      if (!file) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+
+      // For JAR clients, the filePath is the extracted directory
+      let searchPath = file.filePath;
+      let filePath = '';
+
+      // Find the file in the extracted directory structure
+      function findFileRecursively(dir: string, targetFile: string): string | null {
+        const files = fs.readdirSync(dir, { withFileTypes: true });
+        
+        for (const file of files) {
+          const fullPath = path.join(dir, file.name);
+          
+          if (file.isDirectory()) {
+            const result = findFileRecursively(fullPath, targetFile);
+            if (result) return result;
+          } else if (file.name === targetFile) {
+            return fullPath;
+          }
+        }
+        return null;
+      }
+
+      const foundPath = findFileRecursively(searchPath, filename);
+      if (!foundPath) {
+        return res.status(404).json({ error: 'File not found in archive' });
+      }
+
+      filePath = foundPath;
 
       // Security check - ensure file is within the extracted directory
-      if (!filePath.startsWith(extractedPath)) {
+      if (!filePath.startsWith(searchPath)) {
         return res.status(403).json({ error: 'Access denied' });
       }
 
@@ -411,9 +473,120 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "File content not found" });
       }
 
-      const content = fs.readFileSync(filePath, 'utf8');
-      res.setHeader('Content-Type', 'text/html');
-      res.send(content);
+      // Handle JAR clients differently
+      if (file.contentType === 'application/java-archive') {
+        // Generate a download page for JAR clients
+        const files = fs.readdirSync(filePath, { recursive: true });
+        const jarFiles = files.filter(f => f.toString().toLowerCase().endsWith('.jar'));
+        const jsonFiles = files.filter(f => f.toString().toLowerCase().endsWith('.json'));
+        
+        const downloadPage = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${file.originalName} - JAR Client</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0; padding: 40px; min-height: 100vh; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .container { 
+            background: white; padding: 40px; border-radius: 15px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); max-width: 600px; text-align: center;
+        }
+        .icon { font-size: 4rem; color: #667eea; margin-bottom: 20px; }
+        h1 { color: #333; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 30px; line-height: 1.6; }
+        .download-btn { 
+            display: inline-block; background: #667eea; color: white; 
+            padding: 15px 30px; text-decoration: none; border-radius: 8px; 
+            margin: 10px; font-weight: bold; transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .download-btn:hover { 
+            background: #5a6fd8; transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .file-list { 
+            background: #f8f9fa; padding: 20px; border-radius: 8px; 
+            margin: 20px 0; text-align: left; 
+        }
+        .file-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid #eee;
+        }
+        .file-item:last-child { border-bottom: none; }
+        .file-name { font-weight: 500; color: #333; }
+        .file-type { 
+            background: #667eea; color: white; padding: 4px 8px; 
+            border-radius: 4px; font-size: 0.8em; 
+        }
+        .instructions { 
+            background: #e3f2fd; padding: 20px; border-radius: 8px; 
+            margin: 20px 0; border-left: 4px solid #2196f3; 
+        }
+        .instructions h3 { color: #1976d2; margin-top: 0; }
+        .instructions ol { text-align: left; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">☕</div>
+        <h1>${file.originalName}</h1>
+        <p>This is a Java-based Minecraft client that requires download and local execution.</p>
+        
+        <div class="file-list">
+            <h3>Available Files:</h3>
+            ${jarFiles.map(f => `
+                <div class="file-item">
+                    <span class="file-name">${f}</span>
+                    <span class="file-type">JAR</span>
+                </div>
+            `).join('')}
+            ${jsonFiles.map(f => `
+                <div class="file-item">
+                    <span class="file-name">${f}</span>
+                    <span class="file-type">JSON</span>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="instructions">
+            <h3>How to Run:</h3>
+            <ol>
+                <li>Download the JAR file below</li>
+                <li>Make sure you have Java installed on your computer</li>
+                <li>Double-click the JAR file or run: <code>java -jar filename.jar</code></li>
+                <li>Follow any additional setup instructions</li>
+            </ol>
+        </div>
+
+        ${jarFiles.map(f => `
+            <a href="/api/files/${fileId}/download/${encodeURIComponent(f)}" class="download-btn">
+                📥 Download ${f}
+            </a>
+        `).join('')}
+        ${jsonFiles.map(f => `
+            <a href="/api/files/${fileId}/download/${encodeURIComponent(f)}" class="download-btn">
+                📄 Download ${f}
+            </a>
+        `).join('')}
+    </div>
+</body>
+</html>`;
+        
+        res.setHeader('Content-Type', 'text/html');
+        res.send(downloadPage);
+      } else {
+        // Handle HTML files normally
+        const content = fs.readFileSync(filePath, 'utf8');
+        res.setHeader('Content-Type', 'text/html');
+        res.send(content);
+      }
     } catch (error) {
       console.error("Error serving file:", error);
       res.status(500).json({ message: "Failed to serve file" });
