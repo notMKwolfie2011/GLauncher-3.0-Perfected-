@@ -39,7 +39,12 @@ const upload = multer({
                    file.mimetype === 'text/json' ||
                    file.originalname.toLowerCase().endsWith('.json');
 
-    if (isHtml || isZip || isJar || isJson) {
+    const isExe = file.mimetype === 'application/x-msdownload' ||
+                  file.mimetype === 'application/x-executable' ||
+                  file.mimetype === 'application/octet-stream' ||
+                  file.originalname.toLowerCase().endsWith('.exe');
+
+    if (isHtml || isZip || isJar || isJson || isExe) {
       cb(null, true);
     } else {
       cb(null, false);

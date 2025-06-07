@@ -119,7 +119,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
         ref={fileInputRef}
         type="file"
         className="hidden"
-        accept=".html,.htm,.zip,.jar,.json"
+        accept=".html,.htm,.zip,.jar,.json,.exe"
         onChange={handleInputChange}
       />
     </>
