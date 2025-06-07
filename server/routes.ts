@@ -613,7 +613,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Delete file from filesystem
       if (fs.existsSync(file.filePath)) {
-        fs.unlinkSync(file.filePath);
+        const stat = fs.statSync(file.filePath);
+        if (stat.isDirectory()) {
+          // For JAR clients, filePath is a directory - remove recursively
+          fs.rmSync(file.filePath, { recursive: true, force: true });
+        } else {
+          // For HTML files, filePath is a file - remove normally
+          fs.unlinkSync(file.filePath);
+        }
       }
 
       // Delete from storage
@@ -638,7 +645,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Delete all files from filesystem
       for (const file of files) {
         if (fs.existsSync(file.filePath)) {
-          fs.unlinkSync(file.filePath);
+          const stat = fs.statSync(file.filePath);
+          if (stat.isDirectory()) {
+            // For JAR clients, filePath is a directory - remove recursively
+            fs.rmSync(file.filePath, { recursive: true, force: true });
+          } else {
+            // For HTML files, filePath is a file - remove normally
+            fs.unlinkSync(file.filePath);
+          }
         }
         await storage.deleteGameFile(file.id);
       }
