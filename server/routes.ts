@@ -27,18 +27,18 @@ const upload = multer({
     const isHtml = file.mimetype === 'text/html' || 
                    file.originalname.toLowerCase().endsWith('.html') || 
                    file.originalname.toLowerCase().endsWith('.htm');
-    
+
     const isZip = file.mimetype === 'application/zip' ||
                   file.mimetype === 'application/x-zip-compressed' ||
                   file.originalname.toLowerCase().endsWith('.zip');
-    
+
     const isJar = file.mimetype === 'application/java-archive' ||
                   file.originalname.toLowerCase().endsWith('.jar');
-    
+
     const isJson = file.mimetype === 'application/json' ||
                    file.mimetype === 'text/json' ||
                    file.originalname.toLowerCase().endsWith('.json');
-    
+
     if (isHtml || isZip || isJar || isJson) {
       cb(null, true);
     } else {
@@ -73,7 +73,7 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
       const allFiles: string[] = [];
 
       zipfile.readEntry();
-      
+
       zipfile.on("entry", (entry) => {
         const fileName = entry.fileName;
         allFiles.push(fileName);
@@ -111,7 +111,7 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
 
           const writeStream = fs.createWriteStream(outputPath);
           readStream.pipe(writeStream);
-          
+
           writeStream.on('close', () => {
             zipfile.readEntry();
           });
@@ -137,7 +137,7 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
         ];
 
         let mainHtml = null;
-        
+
         // First, look for exact matches in root directory
         for (const pattern of priorityPatterns) {
           mainHtml = htmlFiles.find(f => {
@@ -169,16 +169,16 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
 
         // Generate warnings based on file structure analysis
         const warnings: string[] = [];
-        
+
         // Check for common issues
         if (htmlFiles.length > 5) {
           warnings.push(`Found ${htmlFiles.length} HTML files - may indicate complex structure`);
         }
-        
+
         if (mainHtml.includes('/')) {
           warnings.push('Main HTML file found in subdirectory - may affect relative paths');
         }
-        
+
         // Analyze file types for better insights
         const fileTypes: Record<string, number> = {};
         allFiles.forEach(f => {
@@ -194,7 +194,7 @@ async function extractZipAndFindHtml(zipPath: string, extractDir: string): Promi
           f.toLowerCase().includes('.gif') ||
           f.toLowerCase().includes('.ico')
         );
-        
+
         if (!hasAssets) {
           warnings.push('No common asset files detected - game may not function properly');
         }
@@ -268,7 +268,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalFilePath = req.file.path;
       let finalOriginalName = req.file.originalname;
       let finalContentType = req.file.mimetype || 'text/html';
-      
+
       // Set appropriate content type for JAR and JSON files
       if (req.file.originalname.toLowerCase().endsWith('.jar')) {
         finalContentType = 'application/java-archive';
@@ -289,7 +289,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // Extract ZIP and find main HTML file
           const result = await extractZipAndFindHtml(req.file.path, extractDir);
-          
+
           if (!result) {
             // Clean up
             fs.rmSync(extractDir, { recursive: true, force: true });
@@ -332,7 +332,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = insertGameFileSchema.parse(fileData);
       const savedFile = await storage.createGameFile(validatedData);
-      
+
       res.json(savedFile);
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -350,12 +350,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Download individual files from extracted archives
+  app.get('/api/files/:id/download/:filename', async (req, res) => {
+    try {
+      const id = req.params.id;
+      const filename = decodeURIComponent(req.params.filename);
+
+      const extractedPath = path.join(uploadDir, `extracted_${id}`);
+      const filePath = path.join(extractedPath, filename);
+
+      // Security check - ensure file is within the extracted directory
+      if (!filePath.startsWith(extractedPath)) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+
+      const stat = await fs.promises.stat(filePath);
+      if (!stat.isFile()) {
+        return res.status(404).json({ error: 'Not a file' });
+      }
+
+      // Set appropriate headers for download
+      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filename)}"`);
+      res.setHeader('Content-Length', stat.size);
+
+      // Set content type based on file extension
+      const ext = path.extname(filename).toLowerCase();
+      if (ext === '.jar') {
+        res.setHeader('Content-Type', 'application/java-archive');
+      } else if (ext === '.json') {
+        res.setHeader('Content-Type', 'application/json');
+      } else {
+        res.setHeader('Content-Type', 'application/octet-stream');
+      }
+
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+
+    } catch (error) {
+      console.error('Download error:', error);
+      res.status(500).json({ error: 'Failed to download file' });
+    }
+  });
+
   // Get file content for playing
   app.get("/api/files/:id/content", async (req, res) => {
     try {
       const fileId = parseInt(req.params.id);
       const file = await storage.getGameFile(fileId);
-      
+
       if (!file) {
         return res.status(404).json({ message: "File not found" });
       }
@@ -379,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const fileId = parseInt(req.params.id);
       const file = await storage.getGameFile(fileId);
-      
+
       if (!file) {
         return res.status(404).json({ message: "File not found" });
       }
@@ -391,7 +437,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Delete from storage
       const deleted = await storage.deleteGameFile(fileId);
-      
+
       if (deleted) {
         res.json({ message: "File deleted successfully" });
       } else {
@@ -407,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/files", async (req, res) => {
     try {
       const files = await storage.getAllGameFiles();
-      
+
       // Delete all files from filesystem
       for (const file of files) {
         if (fs.existsSync(file.filePath)) {
@@ -415,7 +461,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         await storage.deleteGameFile(file.id);
       }
-      
+
       res.json({ message: "All files deleted successfully" });
     } catch (error) {
       console.error("Error clearing files:", error);
@@ -438,7 +484,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const theme = await storage.getCommunityTheme(id);
-      
+
       if (theme) {
         res.json(theme);
       } else {
@@ -476,11 +522,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { rating } = req.body;
-      
+
       if (rating < 1 || rating > 5) {
         return res.status(400).json({ message: "Rating must be between 1 and 5" });
       }
-      
+
       await storage.rateTheme(id, rating);
       res.json({ message: "Rating submitted" });
     } catch (error) {

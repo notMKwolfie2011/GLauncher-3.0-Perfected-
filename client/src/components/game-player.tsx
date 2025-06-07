@@ -134,6 +134,11 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
     );
   }
 
+  // Check if this is a JAR-based client
+  const isJarClient = currentFile.originalName.toLowerCase().includes('.jar') || 
+                     (currentFile.originalName.toLowerCase().includes('client') && 
+                      currentFile.extractedFiles?.some(f => f.toLowerCase().endsWith('.jar')));
+
   return (
     <>
       {/* Player Controls */}
