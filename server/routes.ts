@@ -198,7 +198,7 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
           warnings.push(`Found ${htmlFiles.length} HTML files - may indicate complex structure`);
         }
 
-        if (mainHtml.includes('/')) {
+        if (mainHtml && mainHtml.includes('/')) {
           warnings.push('Main HTML file found in subdirectory - may affect relative paths');
         }
 
