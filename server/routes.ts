@@ -128,6 +128,7 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
         let clientType: 'html' | 'jar' | null = null;
         let mainFile = null;
         let originalName = '';
+        let mainHtml: string | null = null;
 
         if (htmlFiles.length > 0) {
           clientType = 'html';
@@ -144,14 +145,12 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
             /^play\.html?$/i
           ];
 
-          let mainHtml = null;
-
           // First, look for exact matches in root directory
           for (const pattern of priorityPatterns) {
             mainHtml = htmlFiles.find(f => {
               const fileName = f.split('/').pop() || '';
               return pattern.test(fileName) && !f.includes('/');
-            });
+            }) || null;
             if (mainHtml) break;
           }
 
@@ -162,18 +161,20 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
               mainHtml = htmlFiles.find(f => {
                 const fileName = f.split('/').pop() || '';
                 return fileName.toLowerCase().includes(keyword) && fileName.toLowerCase().endsWith('.html');
-              });
+              }) || null;
               if (mainHtml) break;
             }
           }
 
           // If still no main file, use the first HTML file in root directory
           if (!mainHtml) {
-            mainHtml = htmlFiles.find(f => !f.includes('/')) || htmlFiles[0];
+            mainHtml = htmlFiles.find(f => !f.includes('/')) || htmlFiles[0] || null;
           }
 
-          mainFile = path.join(extractDir, mainHtml);
-          originalName = path.basename(mainHtml);
+          if (mainHtml) {
+            mainFile = path.join(extractDir, mainHtml);
+            originalName = path.basename(mainHtml);
+          }
         } else if (jarFiles.length > 0) {
           clientType = 'jar';
           // For JAR clients, use the ZIP name as the original name
