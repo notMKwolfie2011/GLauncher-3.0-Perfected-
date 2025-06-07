@@ -23,7 +23,7 @@ const upload = multer({
     fileSize: 80 * 1024 * 1024, // 80MB limit
   },
   fileFilter: (req, file, cb) => {
-    // Accept HTML files and ZIP files
+    // Accept HTML, ZIP, JAR, and JSON files
     const isHtml = file.mimetype === 'text/html' || 
                    file.originalname.toLowerCase().endsWith('.html') || 
                    file.originalname.toLowerCase().endsWith('.htm');
@@ -32,7 +32,14 @@ const upload = multer({
                   file.mimetype === 'application/x-zip-compressed' ||
                   file.originalname.toLowerCase().endsWith('.zip');
     
-    if (isHtml || isZip) {
+    const isJar = file.mimetype === 'application/java-archive' ||
+                  file.originalname.toLowerCase().endsWith('.jar');
+    
+    const isJson = file.mimetype === 'application/json' ||
+                   file.mimetype === 'text/json' ||
+                   file.originalname.toLowerCase().endsWith('.json');
+    
+    if (isHtml || isZip || isJar || isJson) {
       cb(null, true);
     } else {
       cb(null, false);
@@ -261,6 +268,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalFilePath = req.file.path;
       let finalOriginalName = req.file.originalname;
       let finalContentType = req.file.mimetype || 'text/html';
+      
+      // Set appropriate content type for JAR and JSON files
+      if (req.file.originalname.toLowerCase().endsWith('.jar')) {
+        finalContentType = 'application/java-archive';
+      } else if (req.file.originalname.toLowerCase().endsWith('.json')) {
+        finalContentType = 'application/json';
+      }
 
       // Check if uploaded file is a ZIP
       const isZip = req.file.mimetype === 'application/zip' ||

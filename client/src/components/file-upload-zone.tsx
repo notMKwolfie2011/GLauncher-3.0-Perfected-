@@ -13,8 +13,8 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
   const { toast } = useToast();
 
   const validateFile = (file: File): boolean => {
-    const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
-    const validExtensions = ['.html', '.htm', '.zip'];
+    const validTypes = ['text/html', 'application/html', 'application/zip', 'application/x-zip-compressed', 'application/octet-stream', 'application/java-archive', 'application/json', 'text/json'];
+    const validExtensions = ['.html', '.htm', '.zip', '.jar', '.json'];
     const maxSize = 80 * 1024 * 1024; // 80MB
 
     if (file.size > maxSize) {
@@ -34,7 +34,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
     if (!hasValidType && !hasValidExtension) {
       toast({
         title: "Invalid file type",
-        description: `${file.name} is not a valid file. Please upload HTML or ZIP files.`,
+        description: `${file.name} is not a valid file. Please upload HTML, ZIP, JAR, or JSON files.`,
         variant: "destructive",
       });
       return false;
@@ -94,7 +94,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
         <div className="upload-content">
           <i className="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
           <p className="text-slate-300 font-medium mb-2">
-            {isLoading ? 'Processing...' : 'Drop HTML or ZIP files here'}
+            {isLoading ? 'Processing...' : 'Drop HTML, ZIP, JAR, or JSON files here'}
           </p>
           <p className="text-sm text-slate-400 mb-4">
             {isLoading ? 'Extracting and processing...' : 'or click to browse'}
@@ -119,7 +119,7 @@ export default function FileUploadZone({ onFileUpload, isLoading }: FileUploadZo
         ref={fileInputRef}
         type="file"
         className="hidden"
-        accept=".html,.htm,.zip"
+        accept=".html,.htm,.zip,.jar,.json"
         onChange={handleInputChange}
       />
     </>
