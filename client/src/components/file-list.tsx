@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import type { GameFile } from "@shared/schema";
 import ClientInfoBadge from "./client-info-badge";
+import { memo, useMemo } from "react";
 
 interface FileListProps {
   files: GameFile[];
@@ -19,7 +20,12 @@ function formatFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
-export default function FileList({ files, currentFile, onFileSelect, onFileDelete, isLoading }: FileListProps) {
+const FileList = memo(function FileList({ files, currentFile, onFileSelect, onFileDelete, isLoading }: FileListProps) {
+  // Memoize sorted files to prevent unnecessary re-renders
+  const sortedFiles = useMemo(() => {
+    return [...files].sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+  }, [files]);
+
   if (files.length === 0) {
     return (
       <div className="flex-1 overflow-y-auto">
@@ -34,7 +40,7 @@ export default function FileList({ files, currentFile, onFileSelect, onFileDelet
 
   return (
     <div className="flex-1 overflow-y-auto">
-      {files.map((file) => (
+      {sortedFiles.map((file) => (
         <div
           key={file.id}
           className={`file-item p-4 border-b border-[hsl(var(--gaming-border))]/50 hover:bg-[hsl(var(--gaming-border))]/10 cursor-pointer transition-colors ${
@@ -82,4 +88,6 @@ export default function FileList({ files, currentFile, onFileSelect, onFileDelet
       ))}
     </div>
   );
-}
+});
+
+export default FileList;

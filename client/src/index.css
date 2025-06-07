@@ -23,7 +23,7 @@
   --destructive-foreground: 210 40% 98%;
   --ring: 239 84% 67%;
   --radius: 0.5rem;
-  
+
   /* Gaming colors - Purple Theme */
   --gaming-primary: 280 100% 70%;
   --gaming-secondary: 280 100% 80%;
@@ -126,6 +126,31 @@
   --destructive-foreground: 210 40% 98%;
   --ring: 239 84% 67%;
   --radius: 0.5rem;
+}
+
+html {
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gaming-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduce animations on slower devices */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer base {

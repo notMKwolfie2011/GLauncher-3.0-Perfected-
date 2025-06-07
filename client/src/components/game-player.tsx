@@ -98,21 +98,21 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600/20 to-blue-600/20 animate-pulse"></div>
               <div className="absolute inset-2 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 animate-pulse delay-75"></div>
               <div className="absolute inset-4 rounded-full bg-gradient-to-r from-purple-500/40 to-blue-500/40 animate-pulse delay-150"></div>
-              
+
               {/* Center logo with glow effect */}
               <div className="absolute inset-8 rounded-full bg-gradient-to-br from-purple-950 to-slate-900 flex items-center justify-center shadow-2xl">
                 <div className="text-4xl font-black text-white drop-shadow-lg">
                   G
                 </div>
               </div>
-              
+
               {/* Floating particles */}
               <div className="absolute top-4 left-6 w-2 h-2 bg-purple-400 rounded-full animate-bounce delay-300"></div>
               <div className="absolute top-8 right-4 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce delay-500"></div>
               <div className="absolute bottom-6 left-8 w-1 h-1 bg-cyan-400 rounded-full animate-bounce delay-700"></div>
               <div className="absolute bottom-4 right-6 w-2 h-2 bg-violet-400 rounded-full animate-bounce delay-1000"></div>
             </div>
-            
+
             <h3 className="text-3xl font-bold text-slate-200 mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               Ready to Launch
             </h3>
@@ -208,10 +208,18 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
             key={iframeKey}
             src={`/api/files/${currentFile.id}/content`}
             className="w-full h-full border-0"
-            title={currentFile.originalName}
-            sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-downloads allow-downloads-without-user-activation allow-top-navigation-by-user-activation"
-            allowFullScreen
+            title="Game Player"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            loading="lazy"
+            importance="high"
+            referrerPolicy="no-referrer"
+            style={{ 
+              willChange: 'transform',
+              backfaceVisibility: 'hidden',
+              transform: 'translateZ(0)'
+            }}
             tabIndex={0}
+            allowFullScreen
             onLoad={(e) => {
               // Focus the iframe after loading to ensure keyboard input works
               const iframe = e.target as HTMLIFrameElement;
@@ -240,13 +248,13 @@ export default function GamePlayer({ currentFile, onClose, onTriggerUpload }: Ga
               iframe.focus();
             }}
           />
-          
+
           {/* Game instructions overlay */}
           <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
             <i className="fas fa-keyboard mr-2"></i>
             Click and hover over game area for keyboard controls
           </div>
-          
+
           {/* Fullscreen hint overlay */}
           {!isFullscreen && (
             <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">

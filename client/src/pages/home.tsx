@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[hsl(var(--gaming-dark))] text-slate-50">
       <AppHeader fileCount={files?.length || 0} onClearAll={clearAllFiles} />
-      
+
       <div className="flex h-[calc(100vh-4rem)]">
         {/* Sidebar */}
         <aside className="w-80 bg-[hsl(var(--gaming-surface))] border-r border-[hsl(var(--gaming-border))] flex flex-col overflow-hidden">
@@ -45,9 +45,9 @@ export default function Home() {
                 Settings
               </Button>
             </div>
-            
+
             <FileUploadZone onFileUpload={uploadFile} isLoading={isLoading} />
-            
+
             <div className="mt-4 text-xs text-slate-400">
               <p><i className="fas fa-info-circle mr-1"></i> Supports HTML and ZIP files up to 80MB</p>
               <p><i className="fas fa-magic mr-1"></i> ZIP files are auto-extracted with main HTML detection</p>
@@ -70,14 +70,21 @@ export default function Home() {
                 )}
               </h3>
             </div>
+
             
-            <FileList
-              files={files || []}
-              currentFile={currentFile}
-              onFileSelect={handleFileSelect}
-              onFileDelete={deleteFile}
-              isLoading={isLoading}
-            />
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-auto scroll-smooth">
+                <FileList
+                  files={files || []}
+                  currentFile={currentFile}
+                  onFileSelect={handleFileSelect}
+                  onFileDelete={deleteFile}
+                  isLoading={isLoading}
+                />
+              </div>
+            </div>
+          </div>
           </div>
         </aside>
 
