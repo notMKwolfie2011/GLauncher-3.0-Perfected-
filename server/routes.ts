@@ -307,11 +307,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalOriginalName = req.file.originalname;
       let finalContentType = req.file.mimetype || 'text/html';
 
-      // Set appropriate content type for JAR and JSON files
+      // Set appropriate content type for JAR, JSON, EXE, and Linux executable files
       if (req.file.originalname.toLowerCase().endsWith('.jar')) {
         finalContentType = 'application/java-archive';
       } else if (req.file.originalname.toLowerCase().endsWith('.json')) {
         finalContentType = 'application/json';
+      } else if (req.file.originalname.toLowerCase().endsWith('.exe')) {
+        finalContentType = 'application/x-msdownload';
+      } else if (req.file.originalname.toLowerCase().endsWith('.appimage')) {
+        finalContentType = 'application/x-appimage';
+      } else if (req.file.originalname.toLowerCase().endsWith('.run')) {
+        finalContentType = 'application/x-executable';
+      } else if (req.file.mimetype === 'application/x-executable' || 
+                 req.file.mimetype === 'application/x-elf') {
+        finalContentType = 'application/x-executable';
       }
 
       // Check if uploaded file is a ZIP
