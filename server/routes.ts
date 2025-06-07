@@ -131,7 +131,7 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
 
         if (htmlFiles.length > 0) {
           clientType = 'html';
-          
+
           // Enhanced main HTML file detection with priority system
           const priorityPatterns = [
             /^index\.html?$/i,
@@ -179,7 +179,14 @@ async function extractZipAndAnalyzeContents(zipPath: string, extractDir: string)
           // For JAR clients, use the ZIP name as the original name
           originalName = path.basename(zipPath, '.zip');
         } else {
-          reject(new Error('No supported files (HTML or JAR) found in ZIP archive'));
+          // Check if we have any other supported files
+          const jsonFiles = allFiles.filter(f => f.toLowerCase().endsWith('.json'));
+          if (jsonFiles.length > 0) {
+            // If we have JSON files but no JAR/HTML, treat as configuration
+            reject(new Error('ZIP contains configuration files but no executable client files (HTML or JAR)'));
+          } else {
+            reject(new Error('No supported files (HTML or JAR) found in ZIP archive'));
+          }
           return;
         }
 
@@ -400,10 +407,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Find the file in the extracted directory structure
       function findFileRecursively(dir: string, targetFile: string): string | null {
         const files = fs.readdirSync(dir, { withFileTypes: true });
-        
+
         for (const file of files) {
           const fullPath = path.join(dir, file.name);
-          
+
           if (file.isDirectory()) {
             const result = findFileRecursively(fullPath, targetFile);
             if (result) return result;
@@ -479,7 +486,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const files = fs.readdirSync(filePath, { recursive: true });
         const jarFiles = files.filter(f => f.toString().toLowerCase().endsWith('.jar'));
         const jsonFiles = files.filter(f => f.toString().toLowerCase().endsWith('.json'));
-        
+
         const downloadPage = `
 <!DOCTYPE html>
 <html lang="en">
@@ -538,7 +545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         <div class="icon">☕</div>
         <h1>${file.originalName}</h1>
         <p>This is a Java-based Minecraft client that requires download and local execution.</p>
-        
+
         <div class="file-list">
             <h3>Available Files:</h3>
             ${jarFiles.map(f => `
@@ -578,7 +585,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     </div>
 </body>
 </html>`;
-        
+
         res.setHeader('Content-Type', 'text/html');
         res.send(downloadPage);
       } else {
