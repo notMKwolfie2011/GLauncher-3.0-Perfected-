@@ -2,8 +2,10 @@ import { useState } from "react";
 import AppHeader from "@/components/app-header";
 import FileUploadZone from "@/components/file-upload-zone";
 import FileList from "@/components/file-list";
-import GamePlayer from "@/components/game-player";
+import GamePlayer from "@/components/enhanced-game-player";
 import SettingsPanel from "@/components/settings-panel-fixed";
+import GameStatsPanel from "@/components/game-stats-panel";
+import GameLibraryPanel from "@/components/game-library-panel";
 import { useFiles } from "@/hooks/use-files";
 import { Button } from "@/components/ui/button";
 import type { GameFile } from "@shared/schema";
@@ -11,6 +13,8 @@ import type { GameFile } from "@shared/schema";
 export default function Home() {
   const [currentFile, setCurrentFile] = useState<GameFile | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
   const { files, isLoading, uploadFile, deleteFile, clearAllFiles } = useFiles();
 
   const handleFileSelect = (file: GameFile) => {
@@ -35,15 +39,35 @@ export default function Home() {
                 <i className="fas fa-upload mr-2 text-[hsl(var(--gaming-primary))]"></i>
                 Upload Client
               </h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSettings(true)}
-                className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              >
-                <i className="fas fa-cog mr-2"></i>
-                Settings
-              </Button>
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowLibrary(true)}
+                  className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                  title="Game Library"
+                >
+                  <i className="fas fa-gamepad"></i>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowStats(true)}
+                  className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                  title="Gaming Stats"
+                >
+                  <i className="fas fa-chart-line"></i>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSettings(true)}
+                  className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                  title="Settings"
+                >
+                  <i className="fas fa-cog"></i>
+                </Button>
+              </div>
             </div>
 
             <FileUploadZone onFileUpload={uploadFile} isLoading={isLoading} />
@@ -101,6 +125,20 @@ export default function Home() {
       <SettingsPanel 
         isOpen={showSettings} 
         onClose={() => setShowSettings(false)} 
+      />
+
+      <GameStatsPanel
+        isOpen={showStats}
+        onClose={() => setShowStats(false)}
+        currentFile={currentFile}
+      />
+
+      <GameLibraryPanel
+        isOpen={showLibrary}
+        onClose={() => setShowLibrary(false)}
+        files={files || []}
+        onFileSelect={handleFileSelect}
+        onFileDelete={deleteFile}
       />
     </div>
   );
