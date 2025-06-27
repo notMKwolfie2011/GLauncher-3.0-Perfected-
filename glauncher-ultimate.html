@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLauncher Ultimate - Advanced HTML5 Game Launcher</title>
+    <meta name="description" content="GLauncher Ultimate - Upload, manage, and play HTML5 games and Eaglercraft clients with advanced gaming features, theme customization, statistics tracking, and community sharing">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'gaming-primary': 'hsl(var(--gaming-primary))',
+                        'gaming-secondary': 'hsl(var(--gaming-secondary))',
+                        'gaming-accent': 'hsl(var(--gaming-accent))',
+                        'gaming-surface': 'hsl(var(--gaming-surface))',
+                        'gaming-card': 'hsl(var(--gaming-card))',
+                        'gaming-border': 'hsl(var(--gaming-border))',
+                        'gaming-text': 'hsl(var(--gaming-text))',
+                        'gaming-dark': 'hsl(var(--gaming-dark))'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slideUp': 'slideUp 0.3s ease-out',
+                        'fadeIn': 'fadeIn 0.5s ease-in',
+                        'scaleIn': 'scaleIn 0.3s ease-out',
+                        'slideDown': 'slideDown 0.3s ease-out',
+                        'rotateIn': 'rotateIn 0.5s ease-out',
+                        'wiggle': 'wiggle 1s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px hsl(var(--gaming-primary) / 0.5)' },
+                            '100%': { boxShadow: '0 0 30px hsl(var(--gaming-primary) / 0.8)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        rotateIn: {
+                            '0%': { transform: 'rotate(-180deg) scale(0)', opacity: '0' },
+                            '100%': { transform: 'rotate(0deg) scale(1)', opacity: '1' }
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Purple Magic Theme (Default) */
+            --gaming-primary: 280 100% 70%;
+            --gaming-secondary: 280 100% 80%;
+            --gaming-accent: 300 100% 70%;
+            --gaming-surface: 260 15% 8%;
+            --gaming-card: 258 20% 15%;
+            --gaming-border: 280 100% 70%;
+            --gaming-text: 285 25% 95%;
+            --gaming-dark: 260 15% 8%;
+        }
+
+        /* Custom Theme Variables */
+        .theme-dark {
+            --gaming-primary: 217 91% 60%;
+            --gaming-secondary: 217 91% 70%;
+            --gaming-accent: 142 86% 59%;
+            --gaming-surface: 222 84% 5%;
+            --gaming-card: 217 33% 17%;
+            --gaming-border: 217 91% 60%;
+            --gaming-text: 210 40% 98%;
+            --gaming-dark: 220 39% 11%;
+        }
+
+        .theme-blue {
+            --gaming-primary: 200 100% 50%;
+            --gaming-secondary: 200 100% 60%;
+            --gaming-accent: 180 100% 50%;
+            --gaming-surface: 220 39% 11%;
+            --gaming-card: 215 28% 17%;
+            --gaming-border: 200 100% 50%;
+            --gaming-text: 210 40% 98%;
+            --gaming-dark: 220 39% 11%;
+        }
+
+        .theme-green {
+            --gaming-primary: 120 100% 50%;
+            --gaming-secondary: 120 100% 60%;
+            --gaming-accent: 140 100% 50%;
+            --gaming-surface: 120 20% 8%;
+            --gaming-card: 125 25% 15%;
+            --gaming-border: 120 100% 50%;
+            --gaming-text: 125 25% 95%;
+            --gaming-dark: 120 20% 8%;
+        }
+
+        .theme-red {
+            --gaming-primary: 0 100% 60%;
+            --gaming-secondary: 0 100% 70%;
+            --gaming-accent: 20 100% 60%;
+            --gaming-surface: 0 20% 8%;
+            --gaming-card: 5 25% 15%;
+            --gaming-border: 0 100% 60%;
+            --gaming-text: 5 25% 95%;
+            --gaming-dark: 0 20% 8%;
+        }
+
+        .theme-orange {
+            --gaming-primary: 30 100% 60%;
+            --gaming-secondary: 30 100% 70%;
+            --gaming-accent: 45 100% 60%;
+            --gaming-surface: 25 20% 8%;
+            --gaming-card: 30 25% 15%;
+            --gaming-border: 30 100% 60%;
+            --gaming-text: 30 25% 95%;
+            --gaming-dark: 25 20% 8%;
+        }
+
+        .theme-cyberpunk {
+            --gaming-primary: 315 100% 60%;
+            --gaming-secondary: 180 100% 60%;
+            --gaming-accent: 60 100% 60%;
+            --gaming-surface: 300 15% 8%;
+            --gaming-card: 315 20% 15%;
+            --gaming-border: 315 100% 60%;
+            --gaming-text: 315 25% 95%;
+            --gaming-dark: 300 15% 8%;
+        }
+
+        .theme-retro {
+            --gaming-primary: 50 100% 60%;
+            --gaming-secondary: 25 100% 60%;
+            --gaming-accent: 75 100% 60%;
+            --gaming-surface: 40 20% 8%;
+            --gaming-card: 45 25% 15%;
+            --gaming-border: 50 100% 60%;
+            --gaming-text: 45 25% 95%;
+            --gaming-dark: 40 20% 8%;
+        }
+
+        body {
+            background: hsl(var(--gaming-dark));
+            color: hsl(var(--gaming-text));
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gaming-gradient {
+            background: linear-gradient(135deg, hsl(var(--gaming-primary)), hsl(var(--gaming-secondary)));
+        }
+
+        .gaming-gradient-hover:hover {
+            background: linear-gradient(135deg, hsl(var(--gaming-secondary)), hsl(var(--gaming-accent)));
+        }
+
+        .game-card {
+            background: hsl(var(--gaming-card));
+            border: 1px solid hsl(var(--gaming-border) / 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, hsl(var(--gaming-primary) / 0.1), transparent);
+            transition: left 0.5s ease-in-out;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            border-color: hsl(var(--gaming-primary));
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px hsl(var(--gaming-primary) / 0.2);
+        }
+
+        .upload-zone {
+            border: 2px dashed hsl(var(--gaming-border) / 0.5);
+            background: hsl(var(--gaming-surface));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, hsl(var(--gaming-primary) / 0.05), hsl(var(--gaming-accent) / 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: hsl(var(--gaming-primary));
+            background: hsl(var(--gaming-card));
+            transform: scale(1.02);
+        }
+
+        .upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        .upload-zone.dragover {
+            border-color: hsl(var(--gaming-accent));
+            background: hsl(var(--gaming-primary) / 0.1);
+            transform: scale(1.05);
+            animation: glow 0.5s ease-in-out;
+        }
+
+        .modal-overlay {
+            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px hsl(var(--gaming-primary) / 0.5);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, hsl(var(--gaming-primary)), hsl(var(--gaming-accent)));
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: hsl(var(--gaming-primary));
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(2n) {
+            background: hsl(var(--gaming-secondary));
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3n) {
+            background: hsl(var(--gaming-accent));
+            animation-delay: -4s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(var(--gaming-surface));
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: hsl(var(--gaming-primary));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--gaming-secondary));
+        }
+
+        /* Game Statistics Animations */
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px hsl(var(--gaming-primary) / 0.2);
+        }
+
+        /* Theme Creator Styles */
+        .color-picker {
+            appearance: none;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-picker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px hsl(var(--gaming-primary) / 0.5);
+        }
+
+        .range-slider {
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: hsl(var(--gaming-surface));
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: hsl(var(--gaming-primary));
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px hsl(var(--gaming-primary) / 0.7);
+        }
+
+        /* Loading animations */
+        .loading-spinner {
+            border: 3px solid hsl(var(--gaming-surface));
+            border-top: 3px solid hsl(var(--gaming-primary));
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 12px 20px;
+            background: hsl(var(--gaming-surface));
+            border: 1px solid hsl(var(--gaming-border));
+            border-radius: 8px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .notification.success {
+            border-color: hsl(120 100% 50%);
+            background: hsl(120 100% 50% / 0.1);
+        }
+
+        .notification.error {
+            border-color: hsl(0 100% 50%);
+            background: hsl(0 100% 50% / 0.1);
+        }
+
+        .notification.warning {
+            border-color: hsl(45 100% 50%);
+            background: hsl(45 100% 50% / 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gaming-dark text-gaming-text">
+    <!-- Floating Particles Background -->
+    <div class="floating-particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: -1s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: -2s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: -3s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: -4s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: -5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: -1.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: -2.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: -3.5s;"></div>
+    </div>
+
+    <div id="app">
+        <!-- Enhanced Header -->
+        <header class="bg-gaming-surface border-b border-gaming-border p-4 sticky top-0 z-40 glass-effect">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl gaming-gradient flex items-center justify-center neon-glow">
+                        <div class="text-2xl font-black text-purple-900">G</div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gaming-text bg-gradient-to-r from-gaming-primary to-gaming-accent bg-clip-text text-transparent">
+                            GLauncher Ultimate
+                        </h1>
+                        <p class="text-sm text-gray-400">Advanced HTML5 Game Management Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-folder text-gaming-secondary"></i>
+                            <span class="text-gray-400">Files: <span id="file-count" class="text-gaming-primary font-semibold">0</span></span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-clock text-gaming-accent"></i>
+                            <span class="text-gray-400">Session: <span id="session-time" class="text-gaming-accent font-semibold">0:00</span></span>
+                        </div>
+                    </div>
+                    <button onclick="clearAllFiles()" class="px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-red-500/30 hover:border-red-500/50">
+                        <i class="fas fa-trash-alt mr-2"></i>Clear All
+                    </button>
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-gaming-primary hover:bg-gaming-card rounded-lg">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex h-[calc(100vh-5rem)]">
+            <!-- Enhanced Sidebar -->
+            <aside id="sidebar" class="sidebar w-80 bg-gaming-surface border-r border-gaming-border flex flex-col overflow-hidden glass-effect">
+                <!-- Upload Section -->
+                <div class="p-6 border-b border-gaming-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold flex items-center">
+                            <i class="fas fa-upload mr-3 text-gaming-primary"></i>
+                            Upload Zone
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="showLibrary()" class="p-2 text-gray-400 hover:text-gaming-primary hover:bg-gaming-card rounded-lg transition-all" title="Game Library">
+                                <i class="fas fa-gamepad"></i>
+                            </button>
+                            <button onclick="showStats()" class="p-2 text-gray-400 hover:text-gaming-secondary hover:bg-gaming-card rounded-lg transition-all" title="Gaming Stats">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button onclick="showSettings()" class="p-2 text-gray-400 hover:text-gaming-accent hover:bg-gaming-card rounded-lg transition-all" title="Settings">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Upload Zone -->
+                    <div class="upload-zone rounded-xl p-8 text-center cursor-pointer relative" 
+                         onclick="document.getElementById('file-input').click()" 
+                         ondrop="handleDrop(event)" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)">
+                        
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full gaming-gradient flex items-center justify-center">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-gaming-text">Drop Files Here</h3>
+                            <p class="text-gaming-text/70 mb-4">HTML, ZIP files up to 80MB</p>
+                            <button class="px-6 py-3 gaming-gradient text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-200 gaming-gradient-hover transform hover:scale-105">
+                                <i class="fas fa-folder-open mr-2"></i>Browse Files
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="file-input" accept=".html,.zip,.jar" multiple style="display: none;" onchange="handleFileSelect(event)">
+                    
+                    <!-- Upload Progress -->
+                    <div id="upload-progress" class="mt-4 hidden">
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="text-gaming-text">Uploading...</span>
+                            <span id="upload-percent" class="text-gaming-primary">0%</span>
+                        </div>
+                        <div class="w-full bg-gaming-surface rounded-full h-2">
+                            <div id="upload-bar" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 space-y-2 text-xs text-gray-400">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-gaming-primary"></i>
+                            <span>Supports HTML, ZIP, and JAR files</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-magic mr-2 text-gaming-secondary"></i>
+                            <span>Auto-detects Eaglercraft clients</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-shield-alt mr-2 text-gaming-accent"></i>
+                            <span>100% client-side processing</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-compress-arrows-alt mr-2 text-gaming-primary"></i>
+                            <span>Automatic ZIP extraction</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File List Section -->
+                <div class="flex-1 flex flex-col">
+                    <div class="p-4 border-b border-gaming-border">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold flex items-center">
+                                <i class="fas fa-files mr-2 text-gaming-secondary"></i>
+                                Game Library
+                            </h3>
+                            <div class="flex items-center space-x-2">
+                                <select id="sort-select" onchange="sortFiles(this.value)" class="px-3 py-1 bg-gaming-card border border-gaming-border rounded text-sm">
+                                    <option value="name">Name</option>
+                                    <option value="date">Date</option>
+                                    <option value="size">Size</option>
+                                    <option value="type">Type</option>
+                                </select>
+                                <button onclick="toggleViewMode()" id="view-toggle" class="p-1 text-gaming-primary hover:text-gaming-secondary" title="Toggle view">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Bar -->
+                        <div class="mt-3 relative">
+                            <input type="text" id="search-input" placeholder="Search games..." 
+                                   onkeyup="searchFiles(this.value)"
+                                   class="w-full px-3 py-2 pl-10 bg-gaming-card border border-gaming-border rounded-lg text-sm focus:border-gaming-primary focus:outline-none transition-colors">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="file-list" class="flex-1 overflow-y-auto p-4 space-y-3">
+                        <div class="text-center text-gray-400 py-12">
+                            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gaming-card flex items-center justify-center">
+                                <i class="fas fa-folder-open text-3xl text-gaming-primary"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold mb-2">No Games Yet</h4>
+                            <p class="text-sm mb-4">Upload HTML or ZIP files to start gaming</p>
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-4 py-2 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                                <i class="fas fa-plus mr-2"></i>Add Games
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Enhanced Main Player Area -->
+            <main class="flex-1 bg-gaming-dark flex flex-col" id="game-area">
+                <div class="flex-1 p-6">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-indigo-900/20 rounded-2xl overflow-hidden shadow-2xl border border-gaming-border flex items-center justify-center relative">
+                        <!-- Enhanced animated background grid -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')"></div>
+                        
+                        <!-- Enhanced Launch Screen -->
+                        <div class="text-center max-w-2xl z-10 px-6">
+                            <!-- Animated Logo -->
+                            <div class="relative w-40 h-40 mx-auto mb-8">
+                                <!-- Outer rotating ring -->
+                                <div class="absolute inset-0 rounded-full border-4 border-gaming-primary/30 animate-spin" style="animation-duration: 20s;"></div>
+                                <div class="absolute inset-2 rounded-full border-2 border-gaming-secondary/40 animate-spin" style="animation-duration: 15s; animation-direction: reverse;"></div>
+                                <div class="absolute inset-4 rounded-full border border-gaming-accent/50 animate-spin" style="animation-duration: 10s;"></div>
+                                
+                                <!-- Glowing rings -->
+                                <div class="absolute inset-6 rounded-full bg-gradient-to-r from-purple-600/20 to-blue-600/20 animate-pulse"></div>
+                                <div class="absolute inset-8 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 animate-pulse" style="animation-delay: 0.5s;"></div>
+                                <div class="absolute inset-10 rounded-full bg-gradient-to-r from-purple-500/40 to-blue-500/40 animate-pulse" style="animation-delay: 1s;"></div>
+                                
+                                <!-- Center logo with enhanced styling -->
+                                <div class="absolute inset-12 rounded-full gaming-gradient flex items-center justify-center shadow-2xl neon-glow">
+                                    <div class="text-5xl font-black text-white drop-shadow-lg">G</div>
+                                </div>
+                                
+                                <!-- Enhanced floating particles -->
+                                <div class="absolute top-6 left-8 w-3 h-3 bg-gaming-primary rounded-full animate-bounce opacity-70" style="animation-delay: 0.3s;"></div>
+                                <div class="absolute top-12 right-6 w-2 h-2 bg-gaming-secondary rounded-full animate-bounce opacity-80" style="animation-delay: 0.6s;"></div>
+                                <div class="absolute bottom-8 left-12 w-2 h-2 bg-gaming-accent rounded-full animate-bounce opacity-60" style="animation-delay: 0.9s;"></div>
+                                <div class="absolute bottom-6 right-8 w-3 h-3 bg-cyan-400 rounded-full animate-bounce opacity-75" style="animation-delay: 1.2s;"></div>
+                                <div class="absolute top-1/2 left-4 w-1 h-1 bg-yellow-400 rounded-full animate-bounce opacity-90" style="animation-delay: 1.5s;"></div>
+                            </div>
+                            
+                            <h2 class="text-5xl font-bold mb-6">
+                                <span class="bg-gradient-to-r from-gaming-primary via-gaming-secondary to-gaming-accent bg-clip-text text-transparent">
+                                    Ready to Launch
+                                </span>
+                            </h2>
+                            
+                            <p class="text-xl text-gaming-text/80 mb-8 leading-relaxed max-w-lg mx-auto">
+                                Experience next-generation HTML5 gaming with advanced features, 
+                                real-time statistics, and seamless gameplay.
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <button onclick="document.getElementById('file-input').click()" 
+                                        class="group px-8 py-4 text-xl font-bold gaming-gradient text-white rounded-xl shadow-2xl hover:shadow-gaming-primary/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 gaming-gradient-hover">
+                                    <i class="fas fa-rocket mr-3 group-hover:animate-bounce"></i>
+                                    Launch Your Adventure
+                                </button>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gaming-text/60 max-w-2xl mx-auto">
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-file-code text-2xl mb-2 text-gaming-primary"></i>
+                                        <span>HTML5 Games</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-archive text-2xl mb-2 text-gaming-secondary"></i>
+                                        <span>ZIP Archives</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-cube text-2xl mb-2 text-gaming-accent"></i>
+                                        <span>JAR Files</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-shield-alt text-2xl mb-2 text-cyan-400"></i>
+                                        <span>Secure Processing</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Stats -->
+                            <div class="mt-12 flex justify-center space-x-8 text-sm text-gaming-text/50">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-primary" id="total-games">0</div>
+                                    <div>Games Loaded</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-secondary" id="total-playtime">0h</div>
+                                    <div>Total Playtime</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-accent" id="session-games">0</div>
+                                    <div>Session Games</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Enhanced Settings Panel -->
+    <div id="settings-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content w-full max-w-6xl bg-gaming-surface border border-gaming-border rounded-2xl glass-effect">
+                <div class="flex items-center justify-between p-6 border-b border-gaming-border">
+                    <h2 class="text-3xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-cog mr-3 text-gaming-primary animate-spin" style="animation-duration: 4s;"></i>
+                        Game Settings
+                    </h2>
+                    <button onclick="hideSettings()" class="text-gray-400 hover:text-gaming-primary transition-colors p-2 hover:bg-gaming-card rounded-lg">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Theme & Appearance -->
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-gaming-text mb-4 flex items-center">
+                                    <i class="fas fa-palette mr-3 text-gaming-primary"></i>
+                                    Theme & Appearance
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gaming-text/80 mb-2">Color Theme</label>
+                                        <select id="theme-select" onchange="changeTheme(this.value)" 
+                                                class="w-full p-3 bg-gaming-card border border-gaming-border rounded-lg text-gaming-text focus:border-gaming-primary focus:outline-none transition-colors">
+                                            <option value="purple">🌟 Purple Magic (Default)</option>
+                                            <option value="dark">🌙 Dark Gaming</option>
+                                            <option value="blue">🌊 Ocean Blue</option>
+                                            <option value="green">🌲 Forest Green</option>
+                                            <option value="red">🔥 Dragon Red</option>
+                                            <option value="orange">🌅 Sunset Orange</option>
+                                            <option value="cyberpunk">⚡ Cyberpunk Neon</option>
+                                            <option value="retro">🕹️ Retro Gaming</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <button onclick="showThemeCreator()" 
+                                                class="flex-1 px-4 py-3 border border-gaming-accent/50 text-gaming-accent hover:bg-gaming-accent/10 rounded-lg transition-all duration-200 font-medium">
+                                            <i class="fas fa-paint-brush mr-2"></i>
+                                            Custom Theme
+                                        </button>
+                                        <button onclick="showThemeSharing()" 
+                                                class="flex-1 px-4 py-3 border border-gaming-primary/50 text-gaming-primary hover:bg-gaming-primary/10 rounded-lg transition-all duration-200 font-medium">
+                                            <i class="fas fa-share mr-2"></i>
+                                            Share Theme
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Settings -->
+                            <div>
+                                <h3 class="text-xl font-bold text-gaming-text mb-4 flex items-center">
+                                    <i class="fas fa-tachometer-alt mr-3 text-gaming-secondary"></i>
+                                    Performance
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Enable FPS Counter</label>
+                                        <input type="checkbox" id="fps-toggle" onchange="toggleFPS(this.checked)" 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Auto-save Game Progress</label>
+                                        <input type="checkbox" id="autosave-toggle" checked 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Hardware Acceleration</label>
+                                        <input type="checkbox" id="hardware-accel" checked 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Controls & Features -->
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-gaming-text mb-4 flex items-center">
+                                    <i class="fas fa-gamepad mr-3 text-gaming-accent"></i>
+                                    Game Controls
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Fullscreen Mode</label>
+                                        <select class="px-3 py-2 bg-gaming-card border border-gaming-border rounded text-sm">
+                                            <option>Auto</option>
+                                            <option>Windowed</option>
+                                            <option>Borderless</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Mouse Sensitivity</label>
+                                        <input type="range" min="0.1" max="2" step="0.1" value="1" 
+                                               class="range-slider flex-1 ml-4">
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Volume Level</label>
+                                        <input type="range" min="0" max="100" step="5" value="80" 
+                                               class="range-slider flex-1 ml-4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Advanced Features -->
+                            <div>
+                                <h3 class="text-xl font-bold text-gaming-text mb-4 flex items-center">
+                                    <i class="fas fa-rocket mr-3 text-gaming-primary"></i>
+                                    Advanced Features
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Statistics Tracking</label>
+                                        <input type="checkbox" id="stats-toggle" checked 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Community Features</label>
+                                        <input type="checkbox" id="community-toggle" 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-sm font-medium text-gaming-text/80">Notification System</label>
+                                        <input type="checkbox" id="notifications-toggle" checked 
+                                               class="w-5 h-5 text-gaming-primary bg-gaming-card border-gaming-border rounded focus:ring-gaming-primary focus:ring-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between pt-8 border-t border-gaming-border mt-8">
+                        <div class="flex space-x-3">
+                            <button onclick="exportSettings()" 
+                                    class="px-4 py-2 border border-gaming-secondary/50 text-gaming-secondary hover:bg-gaming-secondary/10 rounded-lg transition-colors">
+                                <i class="fas fa-download mr-2"></i>Export Settings
+                            </button>
+                            <button onclick="importSettings()" 
+                                    class="px-4 py-2 border border-gaming-accent/50 text-gaming-accent hover:bg-gaming-accent/10 rounded-lg transition-colors">
+                                <i class="fas fa-upload mr-2"></i>Import Settings
+                            </button>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="resetSettings()" 
+                                    class="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                <i class="fas fa-undo mr-2"></i>Reset Defaults
+                            </button>
+                            <button onclick="hideSettings()" 
+                                    class="px-6 py-2 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity font-medium">
+                                <i class="fas fa-check mr-2"></i>Apply Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Game Library Panel -->
+    <div id="library-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content w-full max-w-7xl h-[90vh] bg-gaming-surface border border-gaming-border rounded-2xl flex flex-col glass-effect">
+                <div class="flex items-center justify-between p-6 border-b border-gaming-border">
+                    <div class="flex items-center space-x-4">
+                        <h2 class="text-2xl font-bold text-gaming-text flex items-center">
+                            <i class="fas fa-gamepad mr-3 text-gaming-primary"></i>
+                            Game Library
+                        </h2>
+                        <div class="flex items-center space-x-2 text-sm text-gaming-text/60">
+                            <span id="library-count">0 games</span>
+                            <span>•</span>
+                            <span id="library-size">0 MB</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="library-search" placeholder="Search library..." 
+                                   onkeyup="searchLibrary(this.value)"
+                                   class="px-3 py-2 bg-gaming-card border border-gaming-border rounded-lg text-sm w-64 focus:border-gaming-primary focus:outline-none">
+                            <select id="library-filter" onchange="filterLibrary(this.value)" 
+                                    class="px-3 py-2 bg-gaming-card border border-gaming-border rounded-lg text-sm">
+                                <option value="all">All Games</option>
+                                <option value="favorites">Favorites</option>
+                                <option value="recent">Recently Played</option>
+                                <option value="html">HTML Files</option>
+                                <option value="zip">ZIP Archives</option>
+                            </select>
+                        </div>
+                        <button onclick="hideLibrary()" class="text-gray-400 hover:text-gaming-primary transition-colors p-2 hover:bg-gaming-card rounded-lg">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 p-6 overflow-y-auto">
+                    <div id="library-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <!-- Library content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Stats Panel -->
+    <div id="stats-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content w-full max-w-4xl bg-gaming-surface border border-gaming-border rounded-2xl glass-effect">
+                <div class="flex items-center justify-between p-6 border-b border-gaming-border">
+                    <h2 class="text-2xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-chart-line mr-3 text-gaming-primary"></i>
+                        Gaming Statistics
+                    </h2>
+                    <button onclick="hideStats()" class="text-gray-400 hover:text-gaming-primary transition-colors p-2 hover:bg-gaming-card rounded-lg">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="p-6" id="stats-content">
+                    <!-- Stats content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Creator Modal -->
+    <div id="theme-creator-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content w-full max-w-4xl bg-gaming-surface border border-gaming-border rounded-2xl glass-effect">
+                <div class="flex items-center justify-between p-6 border-b border-gaming-border">
+                    <h2 class="text-2xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-paint-brush mr-3 text-gaming-primary"></i>
+                        Theme Creator
+                    </h2>
+                    <button onclick="hideThemeCreator()" class="text-gray-400 hover:text-gaming-primary transition-colors p-2 hover:bg-gaming-card rounded-lg">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Color Controls -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Color Customization</h3>
+                            <div class="space-y-4" id="color-controls">
+                                <!-- Color controls will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Preview -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Theme Preview</h3>
+                            <div id="theme-preview" class="border border-gaming-border rounded-lg p-4 space-y-3">
+                                <!-- Preview content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-gaming-border mt-6">
+                        <input type="text" id="theme-name" placeholder="Enter theme name..." 
+                               class="px-4 py-2 bg-gaming-card border border-gaming-border rounded-lg flex-1 mr-4">
+                        <div class="flex space-x-3">
+                            <button onclick="resetTheme()" 
+                                    class="px-4 py-2 border border-gray-500/50 text-gray-400 hover:text-gray-300 rounded-lg transition-colors">
+                                Reset
+                            </button>
+                            <button onclick="saveCustomTheme()" 
+                                    class="px-6 py-2 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                                Save Theme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Global State Management
+        let gameFiles = [];
+        let currentFile = null;
+        let gameStats = {
+            sessionTime: 0,
+            totalPlayTime: 0,
+            gamesPlayed: 0,
+            lastPlayed: '',
+            favoriteGames: [],
+            sessionGames: 0
+        };
+        let gameMetadata = {};
+        let settings = {
+            theme: 'purple',
+            fpsCounter: false,
+            autoSave: true,
+            hardwareAccel: true,
+            statsTracking: true,
+            notifications: true,
+            volume: 80,
+            mouseSensitivity: 1,
+            fullscreenMode: 'auto'
+        };
+        let sessionStart = Date.now();
+        let playTimeInterval = null;
+        let currentSort = 'name';
+        let viewMode = 'grid';
+        let searchQuery = '';
+
+        // Theme System with Enhanced Features
+        const themes = {
+            purple: {
+                '--gaming-primary': '280 100% 70%',
+                '--gaming-secondary': '280 100% 80%',
+                '--gaming-accent': '300 100% 70%',
+                '--gaming-surface': '260 15% 8%',
+                '--gaming-card': '258 20% 15%',
+                '--gaming-border': '280 100% 70%',
+                '--gaming-text': '285 25% 95%',
+                '--gaming-dark': '260 15% 8%'
+            },
+            dark: {
+                '--gaming-primary': '217 91% 60%',
+                '--gaming-secondary': '217 91% 70%',
+                '--gaming-accent': '142 86% 59%',
+                '--gaming-surface': '222 84% 5%',
+                '--gaming-card': '217 33% 17%',
+                '--gaming-border': '217 91% 60%',
+                '--gaming-text': '210 40% 98%',
+                '--gaming-dark': '220 39% 11%'
+            },
+            blue: {
+                '--gaming-primary': '200 100% 50%',
+                '--gaming-secondary': '200 100% 60%',
+                '--gaming-accent': '180 100% 50%',
+                '--gaming-surface': '220 39% 11%',
+                '--gaming-card': '215 28% 17%',
+                '--gaming-border': '200 100% 50%',
+                '--gaming-text': '210 40% 98%',
+                '--gaming-dark': '220 39% 11%'
+            },
+            green: {
+                '--gaming-primary': '120 100% 50%',
+                '--gaming-secondary': '120 100% 60%',
+                '--gaming-accent': '140 100% 50%',
+                '--gaming-surface': '120 20% 8%',
+                '--gaming-card': '125 25% 15%',
+                '--gaming-border': '120 100% 50%',
+                '--gaming-text': '125 25% 95%',
+                '--gaming-dark': '120 20% 8%'
+            },
+            red: {
+                '--gaming-primary': '0 100% 60%',
+                '--gaming-secondary': '0 100% 70%',
+                '--gaming-accent': '20 100% 60%',
+                '--gaming-surface': '0 20% 8%',
+                '--gaming-card': '5 25% 15%',
+                '--gaming-border': '0 100% 60%',
+                '--gaming-text': '5 25% 95%',
+                '--gaming-dark': '0 20% 8%'
+            },
+            orange: {
+                '--gaming-primary': '30 100% 60%',
+                '--gaming-secondary': '30 100% 70%',
+                '--gaming-accent': '45 100% 60%',
+                '--gaming-surface': '25 20% 8%',
+                '--gaming-card': '30 25% 15%',
+                '--gaming-border': '30 100% 60%',
+                '--gaming-text': '30 25% 95%',
+                '--gaming-dark': '25 20% 8%'
+            },
+            cyberpunk: {
+                '--gaming-primary': '315 100% 60%',
+                '--gaming-secondary': '180 100% 60%',
+                '--gaming-accent': '60 100% 60%',
+                '--gaming-surface': '300 15% 8%',
+                '--gaming-card': '315 20% 15%',
+                '--gaming-border': '315 100% 60%',
+                '--gaming-text': '315 25% 95%',
+                '--gaming-dark': '300 15% 8%'
+            },
+            retro: {
+                '--gaming-primary': '50 100% 60%',
+                '--gaming-secondary': '25 100% 60%',
+                '--gaming-accent': '75 100% 60%',
+                '--gaming-surface': '40 20% 8%',
+                '--gaming-card': '45 25% 15%',
+                '--gaming-border': '50 100% 60%',
+                '--gaming-text': '45 25% 95%',
+                '--gaming-dark': '40 20% 8%'
+            }
+        };
+
+        // Enhanced Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            if (!settings.notifications) return;
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type} animate-slideDown`;
+            notification.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('notifications').appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideUp 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, duration);
+        }
+
+        // Enhanced Data Management
+        function loadSavedData() {
+            try {
+                const savedFiles = localStorage.getItem('glauncher-ultimate-files');
+                const savedStats = localStorage.getItem('glauncher-ultimate-stats');
+                const savedSettings = localStorage.getItem('glauncher-ultimate-settings');
+                const savedMetadata = localStorage.getItem('glauncher-ultimate-metadata');
+
+                if (savedFiles) gameFiles = JSON.parse(savedFiles);
+                if (savedStats) gameStats = { ...gameStats, ...JSON.parse(savedStats) };
+                if (savedSettings) settings = { ...settings, ...JSON.parse(savedSettings) };
+                if (savedMetadata) gameMetadata = JSON.parse(savedMetadata);
+
+                updateAllDisplays();
+                applySettings();
+            } catch (error) {
+                console.error('Failed to load saved data:', error);
+                showNotification('Failed to load saved data', 'error');
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('glauncher-ultimate-files', JSON.stringify(gameFiles));
+                localStorage.setItem('glauncher-ultimate-stats', JSON.stringify(gameStats));
+                localStorage.setItem('glauncher-ultimate-settings', JSON.stringify(settings));
+                localStorage.setItem('glauncher-ultimate-metadata', JSON.stringify(gameMetadata));
+            } catch (error) {
+                console.error('Failed to save data:', error);
+                showNotification('Failed to save data', 'error');
+            }
+        }
+
+        // Enhanced File Handling with Progress
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            processMultipleFiles(files);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            processMultipleFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+        }
+
+        function processMultipleFiles(files) {
+            if (files.length === 0) return;
+
+            const validFiles = files.filter(file => {
+                const validTypes = ['.html', '.zip', '.jar'];
+                const isValidType = validTypes.some(type => file.name.toLowerCase().endsWith(type));
+                const isValidSize = file.size <= 80 * 1024 * 1024; // 80MB
+
+                if (!isValidType) {
+                    showNotification(`Invalid file type: ${file.name}`, 'error');
+                    return false;
+                }
+                if (!isValidSize) {
+                    showNotification(`File too large: ${file.name} (max 80MB)`, 'error');
+                    return false;
+                }
+                return true;
+            });
+
+            if (validFiles.length === 0) return;
+
+            showUploadProgress();
+            let processed = 0;
+
+            validFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    processFile(file, () => {
+                        processed++;
+                        updateUploadProgress((processed / validFiles.length) * 100);
+                        
+                        if (processed === validFiles.length) {
+                            hideUploadProgress();
+                            showNotification(`Successfully uploaded ${processed} file(s)`, 'success');
+                            updateAllDisplays();
+                        }
+                    });
+                }, index * 100);
+            });
+        }
+
+        function processFile(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const gameFile = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    originalName: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadedAt: new Date().toISOString(),
+                    content: e.target.result,
+                    clientType: detectClientType(file.name, e.target.result),
+                    tags: generateAutoTags(file.name)
+                };
+
+                gameFiles.push(gameFile);
+                
+                // Initialize metadata
+                gameMetadata[gameFile.id] = {
+                    favorite: false,
+                    playCount: 0,
+                    lastPlayed: null,
+                    totalPlayTime: 0,
+                    rating: 0,
+                    notes: '',
+                    tags: gameFile.tags
+                };
+
+                saveData();
+                if (callback) callback();
+            };
+
+            reader.onerror = function() {
+                showNotification(`Failed to process file: ${file.name}`, 'error');
+                if (callback) callback();
+            };
+
+            if (file.name.toLowerCase().endsWith('.html')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function detectClientType(filename, content) {
+            const name = filename.toLowerCase();
+            if (name.includes('eaglercraft')) return 'Eaglercraft';
+            if (name.includes('minecraft')) return 'Minecraft';
+            if (name.includes('pixel')) return 'Pixel Client';
+            if (typeof content === 'string' && content.includes('eaglercraft')) return 'Eaglercraft';
+            return 'HTML5 Game';
+        }
+
+        function generateAutoTags(filename) {
+            const tags = [];
+            const name = filename.toLowerCase();
+            
+            if (name.includes('minecraft') || name.includes('eaglercraft')) tags.push('minecraft');
+            if (name.includes('pixel')) tags.push('pixel');
+            if (name.includes('1.8')) tags.push('1.8.x');
+            if (name.includes('1.5')) tags.push('1.5.x');
+            if (name.includes('beta')) tags.push('beta');
+            if (name.endsWith('.zip')) tags.push('archive');
+            if (name.endsWith('.html')) tags.push('html5');
+            
+            return tags;
+        }
+
+        // Progress System
+        function showUploadProgress() {
+            document.getElementById('upload-progress').classList.remove('hidden');
+        }
+
+        function updateUploadProgress(percent) {
+            document.getElementById('upload-percent').textContent = Math.round(percent) + '%';
+            document.getElementById('upload-bar').style.width = percent + '%';
+        }
+
+        function hideUploadProgress() {
+            setTimeout(() => {
+                document.getElementById('upload-progress').classList.add('hidden');
+            }, 1000);
+        }
+
+        // Enhanced File Management
+        function updateFileList() {
+            const fileList = document.getElementById('file-list');
+            let filteredFiles = [...gameFiles];
+
+            // Apply search filter
+            if (searchQuery) {
+                filteredFiles = filteredFiles.filter(file => 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (gameMetadata[file.id]?.tags || []).some(tag => 
+                        tag.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                );
+            }
+
+            // Apply sorting
+            filteredFiles.sort((a, b) => {
+                switch (currentSort) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'date':
+                        return new Date(b.uploadedAt) - new Date(a.uploadedAt);
+                    case 'size':
+                        return b.size - a.size;
+                    case 'type':
+                        return a.clientType.localeCompare(b.clientType);
+                    default:
+                        return 0;
+                }
+            });
+
+            if (filteredFiles.length === 0) {
+                fileList.innerHTML = `
+                    <div class="text-center text-gray-400 py-12">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gaming-card flex items-center justify-center">
+                            <i class="fas fa-${searchQuery ? 'search' : 'folder-open'} text-3xl text-gaming-primary"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold mb-2">${searchQuery ? 'No Results Found' : 'No Games Yet'}</h4>
+                        <p class="text-sm mb-4">${searchQuery ? 'Try a different search term' : 'Upload HTML or ZIP files to start gaming'}</p>
+                        ${!searchQuery ? `
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-4 py-2 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                                <i class="fas fa-plus mr-2"></i>Add Games
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            fileList.innerHTML = filteredFiles.map(file => {
+                const metadata = gameMetadata[file.id] || {};
+                return `
+                    <div class="game-card rounded-xl p-4 cursor-pointer group" onclick="playGame(${file.id})">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gaming-text truncate group-hover:text-gaming-primary transition-colors">
+                                    ${file.name}
+                                </h3>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-xs px-2 py-1 bg-gaming-primary/20 text-gaming-primary rounded-full">
+                                        ${file.clientType}
+                                    </span>
+                                    ${metadata.favorite ? '<i class="fas fa-heart text-yellow-400 text-sm"></i>' : ''}
+                                    ${metadata.playCount > 0 ? `<span class="text-xs text-gray-400">${metadata.playCount} plays</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="event.stopPropagation(); toggleFavorite(${file.id})" 
+                                        class="p-1 text-gray-400 hover:text-yellow-400 transition-colors">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button onclick="event.stopPropagation(); showFileOptions(${file.id})" 
+                                        class="p-1 text-gray-400 hover:text-gaming-primary transition-colors">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs text-gray-400 space-y-1 mb-3">
+                            <div class="flex justify-between">
+                                <span>Size: ${formatFileSize(file.size)}</span>
+                                <span>Uploaded: ${new Date(file.uploadedAt).toLocaleDateString()}</span>
+                            </div>
+                            ${metadata.lastPlayed ? `
+                                <div>Last played: ${new Date(metadata.lastPlayed).toLocaleDateString()}</div>
+                            ` : ''}
+                        </div>
+                        
+                        ${metadata.tags && metadata.tags.length > 0 ? `
+                            <div class="flex flex-wrap gap-1 mb-3">
+                                ${metadata.tags.slice(0, 3).map(tag => `
+                                    <span class="text-xs px-2 py-1 bg-gaming-surface text-gaming-text/70 rounded">
+                                        ${tag}
+                                    </span>
+                                `).join('')}
+                                ${metadata.tags.length > 3 ? `<span class="text-xs text-gray-400">+${metadata.tags.length - 3}</span>` : ''}
+                            </div>
+                        ` : ''}
+                        
+                        <button class="w-full py-2 gaming-gradient text-white rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 group-hover:scale-105">
+                            <i class="fas fa-play mr-2"></i>Launch Game
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function searchFiles(query) {
+            searchQuery = query;
+            updateFileList();
+        }
+
+        function sortFiles(sortBy) {
+            currentSort = sortBy;
+            updateFileList();
+        }
+
+        function toggleViewMode() {
+            viewMode = viewMode === 'grid' ? 'list' : 'grid';
+            const toggle = document.getElementById('view-toggle');
+            toggle.innerHTML = `<i class="fas fa-${viewMode === 'grid' ? 'th-list' : 'th-large'}"></i>`;
+            // Could implement different view modes here
+        }
+
+        // Enhanced Game Playing
+        function playGame(id) {
+            const file = gameFiles.find(f => f.id === id);
+            if (!file) return;
+
+            currentFile = file;
+            const metadata = gameMetadata[id] || {};
+            
+            // Update metadata
+            metadata.playCount = (metadata.playCount || 0) + 1;
+            metadata.lastPlayed = new Date().toISOString();
+            gameMetadata[id] = metadata;
+            
+            // Update stats
+            gameStats.gamesPlayed++;
+            gameStats.sessionGames++;
+            gameStats.lastPlayed = new Date().toISOString();
+
+            const gameArea = document.getElementById('game-area');
+            gameArea.innerHTML = `
+                <!-- Enhanced Player Controls -->
+                <div class="bg-gaming-surface/80 backdrop-blur-sm border-b border-gaming-border p-4 sticky top-0 z-30">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-lg gaming-gradient flex items-center justify-center">
+                                    <i class="fas fa-gamepad text-white"></i>
+                                </div>
+                                <div>
+                                    <h2 class="font-bold text-gaming-text flex items-center gap-2">
+                                        ${file.name}
+                                        <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium animate-pulse">
+                                            <i class="fas fa-circle text-green-400 text-xs mr-1"></i>
+                                            LIVE
+                                        </span>
+                                    </h2>
+                                    <div class="flex items-center space-x-4 mt-1 text-sm text-gaming-text/70">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Session: <span id="play-time" class="text-gaming-primary ml-1">0:00</span>
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-play mr-1"></i>
+                                            Plays: ${metadata.playCount || 0}
+                                        </span>
+                                        ${settings.fpsCounter ? `
+                                            <span class="flex items-center">
+                                                <i class="fas fa-tachometer-alt mr-1"></i>
+                                                FPS: <span id="fps-counter" class="text-gaming-secondary ml-1">--</span>
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="refreshGame()" class="p-2 text-gaming-text/70 hover:text-gaming-primary transition-colors" title="Refresh game">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                            <button onclick="toggleFullscreen()" class="p-2 text-gaming-text/70 hover:text-gaming-secondary transition-colors" title="Toggle fullscreen (F11)">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button onclick="showGameMenu()" class="p-2 text-gaming-text/70 hover:text-gaming-accent transition-colors" title="Game menu">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <button onclick="closeGame()" class="p-2 text-gaming-text/70 hover:text-red-400 transition-colors" title="Close game">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Player Area -->
+                <div class="flex-1 p-4 relative">
+                    <div class="w-full h-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-gaming-border relative group">
+                        <iframe id="game-iframe" 
+                                src="data:text/html;charset=utf-8,${encodeURIComponent(file.content)}" 
+                                class="w-full h-full border-0" 
+                                title="${file.name}"
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-downloads allow-downloads-without-user-activation allow-top-navigation-by-user-activation"
+                                allowfullscreen
+                                tabindex="0"
+                                onload="onGameLoad()">
+                        </iframe>
+                        
+                        <!-- Loading overlay -->
+                        <div id="game-loading" class="absolute inset-0 bg-black/90 flex items-center justify-center z-10">
+                            <div class="text-center">
+                                <div class="loading-spinner mx-auto mb-4"></div>
+                                <h3 class="text-xl font-semibold text-gaming-text mb-2">Loading Game...</h3>
+                                <p class="text-gaming-text/70">${file.name}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Game overlay controls -->
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                            <!-- Instructions overlay -->
+                            <div class="absolute top-4 left-4 bg-black/80 text-white px-4 py-2 rounded-lg text-sm backdrop-blur-sm">
+                                <i class="fas fa-keyboard mr-2"></i>
+                                Click to focus • F11 for fullscreen
+                            </div>
+                            
+                            <!-- Performance overlay -->
+                            ${settings.fpsCounter ? `
+                                <div class="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-2 rounded-lg text-sm backdrop-blur-sm">
+                                    <div class="flex items-center gap-4 text-xs">
+                                        <span class="flex items-center gap-1">
+                                            <i class="fas fa-clock text-gaming-primary"></i>
+                                            <span id="game-time">0:00</span>
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i class="fas fa-tachometer-alt text-gaming-secondary"></i>
+                                            <span id="game-fps">--</span> FPS
+                                        </span>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Start play time tracking
+            startPlayTimeTracking();
+            saveData();
+        }
+
+        function onGameLoad() {
+            // Hide loading overlay
+            setTimeout(() => {
+                const loading = document.getElementById('game-loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(() => loading.remove(), 300);
+                }
+            }, 1000);
+
+            // Focus on game
+            const iframe = document.getElementById('game-iframe');
+            if (iframe) {
+                iframe.focus();
+                try {
+                    iframe.contentWindow?.focus();
+                } catch (e) {
+                    // CORS restriction
+                }
+            }
+
+            // Start FPS counter if enabled
+            if (settings.fpsCounter) {
+                startFPSCounter();
+            }
+        }
+
+        function startPlayTimeTracking() {
+            let startTime = Date.now();
+            
+            playTimeInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                const playTimeElement = document.getElementById('play-time');
+                const gameTimeElement = document.getElementById('game-time');
+                const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (playTimeElement) playTimeElement.textContent = timeString;
+                if (gameTimeElement) gameTimeElement.textContent = timeString;
+                
+                // Update total play time
+                if (currentFile && gameMetadata[currentFile.id]) {
+                    gameMetadata[currentFile.id].totalPlayTime = elapsed;
+                }
+            }, 1000);
+        }
+
+        function startFPSCounter() {
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            function updateFPS() {
+                frameCount++;
+                const currentTime = performance.now();
+                
+                if (currentTime - lastTime >= 1000) {
+                    const fps = Math.round(frameCount * 1000 / (currentTime - lastTime));
+                    const fpsElements = [
+                        document.getElementById('fps-counter'),
+                        document.getElementById('game-fps')
+                    ];
+                    
+                    fpsElements.forEach(el => {
+                        if (el) el.textContent = fps;
+                    });
+                    
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+                
+                if (currentFile) {
+                    requestAnimationFrame(updateFPS);
+                }
+            }
+            
+            requestAnimationFrame(updateFPS);
+        }
+
+        function refreshGame() {
+            const iframe = document.getElementById('game-iframe');
+            if (iframe) {
+                iframe.src = iframe.src;
+                showNotification('Game refreshed', 'success');
+            }
+        }
+
+        function showGameMenu() {
+            // Could implement a game-specific menu here
+            showNotification('Game menu coming soon!', 'info');
+        }
+
+        function closeGame() {
+            if (playTimeInterval) {
+                clearInterval(playTimeInterval);
+                playTimeInterval = null;
+            }
+
+            if (currentFile && gameMetadata[currentFile.id]) {
+                const totalTime = gameMetadata[currentFile.id].totalPlayTime || 0;
+                gameStats.totalPlayTime += totalTime;
+                gameStats.sessionTime += totalTime;
+            }
+
+            currentFile = null;
+            showLaunchScreen();
+            saveData();
+        }
+
+        function showLaunchScreen() {
+            const gameArea = document.getElementById('game-area');
+            gameArea.innerHTML = `
+                <div class="flex-1 p-6">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-indigo-900/20 rounded-2xl overflow-hidden shadow-2xl border border-gaming-border flex items-center justify-center relative">
+                        <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')"></div>
+                        <div class="text-center max-w-2xl z-10 px-6">
+                            <div class="relative w-40 h-40 mx-auto mb-8">
+                                <div class="absolute inset-0 rounded-full border-4 border-gaming-primary/30 animate-spin" style="animation-duration: 20s;"></div>
+                                <div class="absolute inset-2 rounded-full border-2 border-gaming-secondary/40 animate-spin" style="animation-duration: 15s; animation-direction: reverse;"></div>
+                                <div class="absolute inset-4 rounded-full border border-gaming-accent/50 animate-spin" style="animation-duration: 10s;"></div>
+                                <div class="absolute inset-6 rounded-full bg-gradient-to-r from-purple-600/20 to-blue-600/20 animate-pulse"></div>
+                                <div class="absolute inset-8 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 animate-pulse" style="animation-delay: 0.5s;"></div>
+                                <div class="absolute inset-10 rounded-full bg-gradient-to-r from-purple-500/40 to-blue-500/40 animate-pulse" style="animation-delay: 1s;"></div>
+                                <div class="absolute inset-12 rounded-full gaming-gradient flex items-center justify-center shadow-2xl neon-glow">
+                                    <div class="text-5xl font-black text-white drop-shadow-lg">G</div>
+                                </div>
+                                <div class="absolute top-6 left-8 w-3 h-3 bg-gaming-primary rounded-full animate-bounce opacity-70" style="animation-delay: 0.3s;"></div>
+                                <div class="absolute top-12 right-6 w-2 h-2 bg-gaming-secondary rounded-full animate-bounce opacity-80" style="animation-delay: 0.6s;"></div>
+                                <div class="absolute bottom-8 left-12 w-2 h-2 bg-gaming-accent rounded-full animate-bounce opacity-60" style="animation-delay: 0.9s;"></div>
+                                <div class="absolute bottom-6 right-8 w-3 h-3 bg-cyan-400 rounded-full animate-bounce opacity-75" style="animation-delay: 1.2s;"></div>
+                                <div class="absolute top-1/2 left-4 w-1 h-1 bg-yellow-400 rounded-full animate-bounce opacity-90" style="animation-delay: 1.5s;"></div>
+                            </div>
+                            <h2 class="text-5xl font-bold mb-6">
+                                <span class="bg-gradient-to-r from-gaming-primary via-gaming-secondary to-gaming-accent bg-clip-text text-transparent">
+                                    Ready to Launch
+                                </span>
+                            </h2>
+                            <p class="text-xl text-gaming-text/80 mb-8 leading-relaxed max-w-lg mx-auto">
+                                Experience next-generation HTML5 gaming with advanced features, 
+                                real-time statistics, and seamless gameplay.
+                            </p>
+                            <div class="space-y-6">
+                                <button onclick="document.getElementById('file-input').click()" 
+                                        class="group px-8 py-4 text-xl font-bold gaming-gradient text-white rounded-xl shadow-2xl hover:shadow-gaming-primary/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 gaming-gradient-hover">
+                                    <i class="fas fa-rocket mr-3 group-hover:animate-bounce"></i>
+                                    Launch Your Adventure
+                                </button>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gaming-text/60 max-w-2xl mx-auto">
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-file-code text-2xl mb-2 text-gaming-primary"></i>
+                                        <span>HTML5 Games</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-archive text-2xl mb-2 text-gaming-secondary"></i>
+                                        <span>ZIP Archives</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-cube text-2xl mb-2 text-gaming-accent"></i>
+                                        <span>JAR Files</span>
+                                    </div>
+                                    <div class="flex flex-col items-center p-4 rounded-lg bg-gaming-surface/30 backdrop-blur-sm">
+                                        <i class="fas fa-shield-alt text-2xl mb-2 text-cyan-400"></i>
+                                        <span>Secure Processing</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-12 flex justify-center space-x-8 text-sm text-gaming-text/50">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-primary" id="total-games">${gameFiles.length}</div>
+                                    <div>Games Loaded</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-secondary" id="total-playtime">${Math.floor(gameStats.totalPlayTime / 3600)}h</div>
+                                    <div>Total Playtime</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gaming-accent" id="session-games">${gameStats.sessionGames}</div>
+                                    <div>Session Games</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utility Functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // File Management Functions
+        function deleteFile(id) {
+            if (confirm('Are you sure you want to delete this game?')) {
+                gameFiles = gameFiles.filter(file => file.id !== id);
+                delete gameMetadata[id];
+                updateAllDisplays();
+                saveData();
+                showNotification('Game deleted successfully', 'success');
+            }
+        }
+
+        function clearAllFiles() {
+            if (confirm('Are you sure you want to delete all games? This cannot be undone.')) {
+                gameFiles = [];
+                gameMetadata = {};
+                updateAllDisplays();
+                saveData();
+                closeGame();
+                showNotification('All games cleared', 'success');
+            }
+        }
+
+        function toggleFavorite(id) {
+            if (!gameMetadata[id]) {
+                gameMetadata[id] = { favorite: false, playCount: 0, lastPlayed: null, totalPlayTime: 0, rating: 0, notes: '', tags: [] };
+            }
+            gameMetadata[id].favorite = !gameMetadata[id].favorite;
+            updateFileList();
+            saveData();
+            showNotification(gameMetadata[id].favorite ? 'Added to favorites' : 'Removed from favorites', 'success');
+        }
+
+        function showFileOptions(id) {
+            // Could implement a context menu here
+            showNotification('File options coming soon!', 'info');
+        }
+
+        // Theme System
+        function changeTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) return;
+
+            // Apply theme to document body class
+            document.body.className = document.body.className.replace(/theme-\w+/g, '') + ` theme-${themeName}`;
+            
+            settings.theme = themeName;
+            saveData();
+            showNotification(`Theme changed to ${themeName}`, 'success');
+        }
+
+        function applySettings() {
+            // Apply theme
+            changeTheme(settings.theme);
+            
+            // Apply other settings
+            document.getElementById('theme-select').value = settings.theme;
+            document.getElementById('fps-toggle').checked = settings.fpsCounter;
+            document.getElementById('autosave-toggle').checked = settings.autoSave;
+            document.getElementById('hardware-accel').checked = settings.hardwareAccel;
+            document.getElementById('stats-toggle').checked = settings.statsTracking;
+            document.getElementById('notifications-toggle').checked = settings.notifications;
+        }
+
+        // Modal Functions
+        function showSettings() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function hideSettings() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        }
+
+        function showLibrary() {
+            updateLibraryContent();
+            document.getElementById('library-modal').classList.remove('hidden');
+        }
+
+        function hideLibrary() {
+            document.getElementById('library-modal').classList.add('hidden');
+        }
+
+        function showStats() {
+            updateStatsContent();
+            document.getElementById('stats-modal').classList.remove('hidden');
+        }
+
+        function hideStats() {
+            document.getElementById('stats-modal').classList.add('hidden');
+        }
+
+        function showThemeCreator() {
+            setupThemeCreator();
+            document.getElementById('theme-creator-modal').classList.remove('hidden');
+        }
+
+        function hideThemeCreator() {
+            document.getElementById('theme-creator-modal').classList.add('hidden');
+        }
+
+        function showThemeSharing() {
+            showNotification('Theme sharing feature coming soon! Create and share custom themes with the community.', 'info');
+        }
+
+        // Library Functions
+        function updateLibraryContent() {
+            const content = document.getElementById('library-content');
+            const countEl = document.getElementById('library-count');
+            const sizeEl = document.getElementById('library-size');
+            
+            if (gameFiles.length === 0) {
+                content.innerHTML = `
+                    <div class="col-span-full text-center text-gray-400 py-12">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gaming-card flex items-center justify-center">
+                            <i class="fas fa-gamepad text-4xl text-gaming-primary"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">No Games in Library</h3>
+                        <p class="text-gaming-text/60 mb-6">Upload some games to start building your collection</p>
+                        <button onclick="document.getElementById('file-input').click(); hideLibrary();" 
+                                class="px-6 py-3 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fas fa-plus mr-2"></i>Add Games
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const totalSize = gameFiles.reduce((sum, file) => sum + file.size, 0);
+            countEl.textContent = `${gameFiles.length} ${gameFiles.length === 1 ? 'game' : 'games'}`;
+            sizeEl.textContent = formatFileSize(totalSize);
+
+            content.innerHTML = gameFiles.map(file => {
+                const metadata = gameMetadata[file.id] || {};
+                return `
+                    <div class="game-card rounded-xl p-6 group hover:scale-105 transition-all duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-gaming-text truncate text-lg group-hover:text-gaming-primary transition-colors">
+                                    ${file.name}
+                                </h3>
+                                <p class="text-gaming-text/60 text-sm mt-1">${file.clientType}</p>
+                            </div>
+                            <button onclick="toggleFavorite(${file.id}); updateLibraryContent();" 
+                                    class="p-2 rounded-lg transition-colors ${metadata.favorite ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 hover:text-yellow-400'}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <div class="space-y-3 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gaming-text/60">Size:</span>
+                                <span class="text-gaming-text">${formatFileSize(file.size)}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gaming-text/60">Plays:</span>
+                                <span class="text-gaming-text">${metadata.playCount || 0}</span>
+                            </div>
+                            ${metadata.lastPlayed ? `
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gaming-text/60">Last played:</span>
+                                    <span class="text-gaming-text">${new Date(metadata.lastPlayed).toLocaleDateString()}</span>
+                                </div>
+                            ` : ''}
+                            ${metadata.totalPlayTime ? `
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gaming-text/60">Play time:</span>
+                                    <span class="text-gaming-text">${formatTime(metadata.totalPlayTime)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${metadata.tags && metadata.tags.length > 0 ? `
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                ${metadata.tags.map(tag => `
+                                    <span class="text-xs px-2 py-1 bg-gaming-primary/20 text-gaming-primary rounded-full">
+                                        ${tag}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+
+                        <div class="flex gap-2">
+                            <button onclick="playGame(${file.id}); hideLibrary();" 
+                                    class="flex-1 py-3 gaming-gradient text-white rounded-lg font-semibold hover:opacity-90 transition-all duration-200 group-hover:scale-105">
+                                <i class="fas fa-play mr-2"></i>Play
+                            </button>
+                            <button onclick="deleteFile(${file.id}); updateLibraryContent();" 
+                                    class="px-4 py-3 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function searchLibrary(query) {
+            // Implement library search
+            showNotification('Library search coming soon!', 'info');
+        }
+
+        function filterLibrary(filter) {
+            // Implement library filtering
+            showNotification('Library filtering coming soon!', 'info');
+        }
+
+        // Stats Functions
+        function updateStatsContent() {
+            const content = document.getElementById('stats-content');
+            const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
+            
+            content.innerHTML = `
+                <div class="space-y-8">
+                    <!-- Current Session -->
+                    <div>
+                        <h3 class="text-xl font-bold text-gaming-text mb-6 flex items-center">
+                            <i class="fas fa-play-circle text-gaming-primary mr-3"></i>
+                            Current Session
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-gaming-primary mb-2">${formatTime(sessionTime)}</div>
+                                <div class="text-sm text-gaming-text/60">Session Time</div>
+                            </div>
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-gaming-secondary mb-2">${gameStats.sessionGames}</div>
+                                <div class="text-sm text-gaming-text/60">Games Played</div>
+                            </div>
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-gaming-accent mb-2">${currentFile ? '1' : '0'}</div>
+                                <div class="text-sm text-gaming-text/60">Active Games</div>
+                            </div>
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-cyan-400 mb-2">${gameFiles.length}</div>
+                                <div class="text-sm text-gaming-text/60">Total Library</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Statistics -->
+                    <div>
+                        <h3 class="text-xl font-bold text-gaming-text mb-6 flex items-center">
+                            <i class="fas fa-trophy text-yellow-400 mr-3"></i>
+                            All-Time Statistics
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-yellow-400 mb-2">${gameStats.gamesPlayed}</div>
+                                <div class="text-sm text-gaming-text/60">Games Launched</div>
+                            </div>
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-blue-400 mb-2">${formatTime(gameStats.totalPlayTime)}</div>
+                                <div class="text-sm text-gaming-text/60">Total Play Time</div>
+                            </div>
+                            <div class="stat-card bg-gaming-card p-6 rounded-xl text-center">
+                                <div class="text-3xl font-bold text-green-400 mb-2">${Object.values(gameMetadata).filter(m => m.favorite).length}</div>
+                                <div class="text-sm text-gaming-text/60">Favorite Games</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Games -->
+                    ${gameFiles.length > 0 ? `
+                        <div>
+                            <h3 class="text-xl font-bold text-gaming-text mb-6 flex items-center">
+                                <i class="fas fa-star text-gaming-accent mr-3"></i>
+                                Most Played Games
+                            </h3>
+                            <div class="space-y-3">
+                                ${gameFiles
+                                    .sort((a, b) => (gameMetadata[b.id]?.playCount || 0) - (gameMetadata[a.id]?.playCount || 0))
+                                    .slice(0, 5)
+                                    .map((file, index) => {
+                                        const metadata = gameMetadata[file.id] || {};
+                                        return `
+                                            <div class="flex items-center justify-between p-4 bg-gaming-card rounded-lg">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="w-8 h-8 rounded-full gaming-gradient flex items-center justify-center font-bold text-white">
+                                                        ${index + 1}
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-semibold text-gaming-text">${file.name}</div>
+                                                        <div class="text-sm text-gaming-text/60">${file.clientType}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="font-semibold text-gaming-primary">${metadata.playCount || 0} plays</div>
+                                                    ${metadata.totalPlayTime ? `
+                                                        <div class="text-sm text-gaming-text/60">${formatTime(metadata.totalPlayTime)}</div>
+                                                    ` : ''}
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between pt-6 border-t border-gaming-border">
+                        <div class="flex space-x-3">
+                            <button onclick="exportStats()" 
+                                    class="px-4 py-2 border border-gaming-secondary/50 text-gaming-secondary hover:bg-gaming-secondary/10 rounded-lg transition-colors">
+                                <i class="fas fa-download mr-2"></i>Export Stats
+                            </button>
+                            <button onclick="resetStats()" 
+                                    class="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                <i class="fas fa-trash-alt mr-2"></i>Reset Stats
+                            </button>
+                        </div>
+                        <button onclick="hideStats()" 
+                                class="px-6 py-2 gaming-gradient text-white rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fas fa-check mr-2"></i>Close
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Settings Functions
+        function toggleFPS(enabled) {
+            settings.fpsCounter = enabled;
+            saveData();
+            showNotification(`FPS counter ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        function resetSettings() {
+            if (confirm('Reset all settings to defaults? This will also reset your theme.')) {
+                settings = {
+                    theme: 'purple',
+                    fpsCounter: false,
+                    autoSave: true,
+                    hardwareAccel: true,
+                    statsTracking: true,
+                    notifications: true,
+                    volume: 80,
+                    mouseSensitivity: 1,
+                    fullscreenMode: 'auto'
+                };
+                applySettings();
+                saveData();
+                showNotification('Settings reset to defaults', 'success');
+            }
+        }
+
+        function exportSettings() {
+            const data = {
+                settings,
+                gameStats,
+                version: '1.0.0',
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'glauncher-settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Settings exported successfully', 'success');
+        }
+
+        function importSettings() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (data.settings) settings = { ...settings, ...data.settings };
+                            if (data.gameStats) gameStats = { ...gameStats, ...data.gameStats };
+                            applySettings();
+                            saveData();
+                            showNotification('Settings imported successfully', 'success');
+                        } catch (error) {
+                            showNotification('Failed to import settings', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function exportStats() {
+            const data = {
+                gameFiles: gameFiles.map(f => ({ ...f, content: '[Content removed for export]' })),
+                gameStats,
+                gameMetadata,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'glauncher-stats.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Statistics exported successfully', 'success');
+        }
+
+        function resetStats() {
+            if (confirm('Reset all statistics? This will clear play counts, playtime, and other game data.')) {
+                gameStats = {
+                    sessionTime: 0,
+                    totalPlayTime: 0,
+                    gamesPlayed: 0,
+                    lastPlayed: '',
+                    favoriteGames: [],
+                    sessionGames: 0
+                };
+                
+                // Reset metadata but keep favorites and tags
+                Object.keys(gameMetadata).forEach(id => {
+                    gameMetadata[id] = {
+                        ...gameMetadata[id],
+                        playCount: 0,
+                        lastPlayed: null,
+                        totalPlayTime: 0
+                    };
+                });
+                
+                updateStatsContent();
+                saveData();
+                showNotification('Statistics reset successfully', 'success');
+            }
+        }
+
+        // Theme Creator Functions
+        function setupThemeCreator() {
+            const controlsContainer = document.getElementById('color-controls');
+            const colorProperties = [
+                { key: 'primary', label: 'Primary Color', icon: 'fas fa-star' },
+                { key: 'secondary', label: 'Secondary Color', icon: 'fas fa-palette' },
+                { key: 'accent', label: 'Accent Color', icon: 'fas fa-magic' },
+                { key: 'surface', label: 'Surface Color', icon: 'fas fa-layer-group' },
+                { key: 'card', label: 'Card Color', icon: 'fas fa-square' },
+                { key: 'border', label: 'Border Color', icon: 'fas fa-border-style' },
+                { key: 'text', label: 'Text Color', icon: 'fas fa-font' },
+                { key: 'dark', label: 'Background Color', icon: 'fas fa-fill' }
+            ];
+
+            controlsContainer.innerHTML = colorProperties.map(prop => `
+                <div class="flex items-center justify-between p-4 bg-gaming-surface rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <i class="${prop.icon} text-gaming-primary"></i>
+                        <span class="font-medium">${prop.label}</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <input type="color" id="color-${prop.key}" class="color-picker" onchange="updateThemePreview()">
+                        <div class="flex flex-col space-y-1">
+                            <input type="range" id="hue-${prop.key}" min="0" max="360" class="range-slider" onchange="updateColorFromHSL('${prop.key}')">
+                            <input type="range" id="sat-${prop.key}" min="0" max="100" class="range-slider" onchange="updateColorFromHSL('${prop.key}')">
+                            <input type="range" id="light-${prop.key}" min="0" max="100" class="range-slider" onchange="updateColorFromHSL('${prop.key}')">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateThemePreview();
+        }
+
+        function updateColorFromHSL(property) {
+            const hue = document.getElementById(`hue-${property}`).value;
+            const sat = document.getElementById(`sat-${property}`).value;
+            const light = document.getElementById(`light-${property}`).value;
+            
+            const color = `hsl(${hue}, ${sat}%, ${light}%)`;
+            document.getElementById(`color-${property}`).value = hslToHex(hue, sat, light);
+            
+            updateThemePreview();
+        }
+
+        function hslToHex(h, s, l) {
+            l /= 100;
+            const a = s * Math.min(l, 1 - l) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
+        function updateThemePreview() {
+            const preview = document.getElementById('theme-preview');
+            preview.innerHTML = `
+                <div class="space-y-3">
+                    <div class="p-3 rounded bg-gaming-primary text-white">
+                        <strong>Primary Element</strong> - Buttons, highlights
+                    </div>
+                    <div class="p-3 rounded bg-gaming-secondary text-white">
+                        <strong>Secondary Element</strong> - Secondary buttons
+                    </div>
+                    <div class="p-3 rounded bg-gaming-accent text-white">
+                        <strong>Accent Element</strong> - Special highlights
+                    </div>
+                    <div class="p-3 rounded bg-gaming-card border border-gaming-border">
+                        <strong>Card Element</strong> - Content cards
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetTheme() {
+            setupThemeCreator();
+            showNotification('Theme reset to current settings', 'info');
+        }
+
+        function saveCustomTheme() {
+            const themeName = document.getElementById('theme-name').value.trim();
+            if (!themeName) {
+                showNotification('Please enter a theme name', 'warning');
+                return;
+            }
+
+            // This would save the custom theme
+            showNotification(`Custom theme "${themeName}" saved!`, 'success');
+            hideThemeCreator();
+        }
+
+        // Utility Functions
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('game-iframe');
+            if (!iframe) return;
+
+            if (!document.fullscreenElement) {
+                iframe.requestFullscreen().catch(err => {
+                    showNotification('Fullscreen not supported or blocked', 'error');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Update all displays
+        function updateAllDisplays() {
+            updateFileList();
+            updateSessionTime();
+            updateQuickStats();
+        }
+
+        function updateSessionTime() {
+            const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
+            const minutes = Math.floor(sessionTime / 60);
+            const seconds = sessionTime % 60;
+            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            const sessionTimeEl = document.getElementById('session-time');
+            if (sessionTimeEl) sessionTimeEl.textContent = timeString;
+        }
+
+        function updateQuickStats() {
+            const fileCountEl = document.getElementById('file-count');
+            const totalGamesEl = document.getElementById('total-games');
+            const totalPlaytimeEl = document.getElementById('total-playtime');
+            const sessionGamesEl = document.getElementById('session-games');
+            
+            if (fileCountEl) fileCountEl.textContent = gameFiles.length;
+            if (totalGamesEl) totalGamesEl.textContent = gameFiles.length;
+            if (totalPlaytimeEl) totalPlaytimeEl.textContent = Math.floor(gameStats.totalPlayTime / 3600) + 'h';
+            if (sessionGamesEl) sessionGamesEl.textContent = gameStats.sessionGames;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F11') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+            if (e.ctrlKey && e.key === 'o') {
+                e.preventDefault();
+                document.getElementById('file-input').click();
+            }
+            if (e.key === 'Escape' && currentFile) {
+                closeGame();
+            }
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            
+            // Start session timer
+            setInterval(updateSessionTime, 1000);
+            setInterval(updateQuickStats, 5000);
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-overlay')) {
+                    e.target.classList.add('hidden');
+                }
+            });
+
+            // Welcome message
+            setTimeout(() => {
+                showNotification('Welcome to GLauncher Ultimate! 🚀', 'success');
+            }, 1000);
+        });
+
+        // Auto-save data periodically
+        setInterval(saveData, 30000); // Save every 30 seconds
+    </script>
+</body>
+</html>

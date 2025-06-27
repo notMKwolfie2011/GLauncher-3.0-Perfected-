@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLauncher - HTML5 Game Launcher</title>
+    <title>GLauncher - Advanced HTML5 Game Launcher</title>
+    <meta name="description" content="GLauncher - Upload, manage, and play HTML5 games and Eaglercraft clients directly in your browser with advanced gaming features">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -19,6 +21,35 @@
                         'gaming-border': 'hsl(280 100% 70%)',
                         'gaming-text': 'hsl(285 25% 95%)',
                         'gaming-dark': 'hsl(260 15% 8%)'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slideUp': 'slideUp 0.3s ease-out',
+                        'fadeIn': 'fadeIn 0.5s ease-in',
+                        'scaleIn': 'scaleIn 0.3s ease-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px hsl(280 100% 70% / 0.5)' },
+                            '100%': { boxShadow: '0 0 30px hsl(280 100% 70% / 0.8)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
                     }
                 }
             }
