@@ -264,31 +264,37 @@
             animation: glow 2s ease-in-out infinite alternate;
         }
 
+        /* Optimized particles for CodePen performance */
         .floating-particles {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
             pointer-events: none;
+            z-index: -1;
+            will-change: transform;
         }
 
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: hsl(var(--gaming-primary));
             border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            animation: float 8s ease-in-out infinite;
+            will-change: transform;
         }
 
-        .particle:nth-child(2n) {
+        .particle:nth-child(2) {
             background: hsl(var(--gaming-secondary));
-            animation-delay: -2s;
+            animation-delay: -3s;
         }
 
-        .particle:nth-child(3n) {
+        .particle:nth-child(3) {
             background: hsl(var(--gaming-accent));
-            animation-delay: -4s;
+            animation-delay: -6s;
         }
 
         /* Custom Scrollbar */
@@ -359,19 +365,40 @@
             box-shadow: 0 0 15px hsl(var(--gaming-primary) / 0.7);
         }
 
-        /* Loading animations */
+        /* Optimized loading animations */
         .loading-spinner {
-            border: 3px solid hsl(var(--gaming-surface));
-            border-top: 3px solid hsl(var(--gaming-primary));
+            border: 2px solid hsl(var(--gaming-surface));
+            border-top: 2px solid hsl(var(--gaming-primary));
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            width: 32px;
+            height: 32px;
+            animation: spin 1.2s linear infinite;
+            will-change: transform;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Performance optimizations for CodePen */
+        * {
+            box-sizing: border-box;
+        }
+
+        .game-card, .stat-card, .modal-content {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* Reduce animations on low-performance devices */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         /* Responsive Design */
@@ -416,17 +443,11 @@
     </style>
 </head>
 <body class="min-h-screen bg-gaming-dark text-gaming-text">
-    <!-- Floating Particles Background -->
+    <!-- Optimized Particles Background (Reduced for performance) -->
     <div class="floating-particles">
-        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 20%; animation-delay: -1s;"></div>
-        <div class="particle" style="left: 30%; animation-delay: -2s;"></div>
-        <div class="particle" style="left: 40%; animation-delay: -3s;"></div>
-        <div class="particle" style="left: 50%; animation-delay: -4s;"></div>
-        <div class="particle" style="left: 60%; animation-delay: -5s;"></div>
-        <div class="particle" style="left: 70%; animation-delay: -1.5s;"></div>
-        <div class="particle" style="left: 80%; animation-delay: -2.5s;"></div>
-        <div class="particle" style="left: 90%; animation-delay: -3.5s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: -2s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: -4s;"></div>
     </div>
 
     <div id="app">
@@ -966,34 +987,89 @@
     </div>
 
     <script>
-        // Enhanced Global State Management
-        let gameFiles = [];
-        let currentFile = null;
-        let gameStats = {
-            sessionTime: 0,
-            totalPlayTime: 0,
-            gamesPlayed: 0,
-            lastPlayed: '',
-            favoriteGames: [],
-            sessionGames: 0
-        };
-        let gameMetadata = {};
-        let settings = {
-            theme: 'purple',
-            fpsCounter: false,
-            autoSave: true,
-            hardwareAccel: true,
-            statsTracking: true,
-            notifications: true,
-            volume: 80,
-            mouseSensitivity: 1,
-            fullscreenMode: 'auto'
-        };
-        let sessionStart = Date.now();
-        let playTimeInterval = null;
-        let currentSort = 'name';
-        let viewMode = 'grid';
-        let searchQuery = '';
+        // Performance optimization for CodePen
+        (function() {
+            'use strict';
+            
+            // Optimize for CodePen environment
+            const isCodePen = window.location.hostname.includes('codepen');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Performance settings
+            const PERFORMANCE_MODE = isMobile || isCodePen;
+            const MAX_FILES = PERFORMANCE_MODE ? 20 : 100;
+            const ANIMATION_DURATION = PERFORMANCE_MODE ? 150 : 300;
+            const UPDATE_INTERVAL = PERFORMANCE_MODE ? 2000 : 1000;
+            
+            // Enhanced Global State Management with performance optimizations
+            let gameFiles = [];
+            let currentFile = null;
+            let gameStats = {
+                sessionTime: 0,
+                totalPlayTime: 0,
+                gamesPlayed: 0,
+                lastPlayed: '',
+                favoriteGames: [],
+                sessionGames: 0
+            };
+            let gameMetadata = {};
+            let settings = {
+                theme: 'purple',
+                fpsCounter: false,
+                autoSave: true,
+                hardwareAccel: true,
+                statsTracking: true,
+                notifications: true,
+                volume: 80,
+                mouseSensitivity: 1,
+                fullscreenMode: 'auto',
+                performanceMode: PERFORMANCE_MODE
+            };
+            let sessionStart = Date.now();
+            let playTimeInterval = null;
+            let currentSort = 'name';
+            let viewMode = 'grid';
+            let searchQuery = '';
+            
+            // Debounce function for performance
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+            
+            // Throttle function for scroll/resize events
+            function throttle(func, wait) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, wait);
+                    }
+                }
+            }
+            
+            // Performance monitoring
+            let performanceMetrics = {
+                loadTime: 0,
+                renderTime: 0,
+                memoryUsage: 0
+            };
+            
+            // Initialize performance monitoring
+            window.addEventListener('load', () => {
+                performanceMetrics.loadTime = performance.now();
+                console.log(`GLauncher loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
+            });
 
         // Theme System with Enhanced Features
         const themes = {
@@ -1079,30 +1155,73 @@
             }
         };
 
-        // Enhanced Notification System
-        function showNotification(message, type = 'info', duration = 4000) {
+        // Optimized Notification System for CodePen
+        const notificationQueue = [];
+        let isShowingNotification = false;
+        
+        function showNotification(message, type = 'info', duration = 3000) {
             if (!settings.notifications) return;
             
+            // Limit notifications for performance
+            if (notificationQueue.length > 3) {
+                notificationQueue.shift();
+            }
+            
+            notificationQueue.push({ message, type, duration });
+            processNotificationQueue();
+        }
+        
+        function processNotificationQueue() {
+            if (isShowingNotification || notificationQueue.length === 0) return;
+            
+            isShowingNotification = true;
+            const { message, type, duration } = notificationQueue.shift();
+            
             const notification = document.createElement('div');
-            notification.className = `notification ${type} animate-slideDown`;
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                padding: 12px 16px;
+                background: hsl(var(--gaming-surface));
+                border: 1px solid hsl(var(--gaming-border));
+                border-radius: 8px;
+                color: hsl(var(--gaming-text));
+                font-size: 14px;
+                max-width: 300px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                will-change: transform;
+            `;
+            
             notification.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} mr-2"></i>
-                        <span>${message}</span>
-                    </div>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-white">
-                        <i class="fas fa-times"></i>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove(); isShowingNotification = false; processNotificationQueue();" 
+                            style="margin-left: 12px; background: none; border: none; color: inherit; cursor: pointer;">
+                        ×
                     </button>
                 </div>
             `;
             
-            document.getElementById('notifications').appendChild(notification);
+            document.body.appendChild(notification);
             
+            // Animate in
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+            });
+            
+            // Auto remove
             setTimeout(() => {
                 if (notification.parentElement) {
-                    notification.style.animation = 'slideUp 0.3s ease-out reverse';
-                    setTimeout(() => notification.remove(), 300);
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        notification.remove();
+                        isShowingNotification = false;
+                        processNotificationQueue();
+                    }, 300);
                 }
             }, duration);
         }
@@ -2361,8 +2480,62 @@
             }, 1000);
         });
 
-        // Auto-save data periodically
-        setInterval(saveData, 30000); // Save every 30 seconds
+        // Auto-save data periodically (optimized for CodePen)
+        setInterval(saveData, PERFORMANCE_MODE ? 60000 : 30000); // Save every 30-60 seconds based on performance mode
+        
+        // Make functions globally accessible
+        window.gameFiles = gameFiles;
+        window.showNotification = showNotification;
+        window.updateAllDisplays = updateAllDisplays;
+        window.loadSavedData = loadSavedData;
+        window.saveData = saveData;
+        window.processFile = processFile;
+        window.playGame = playGame;
+        window.closeGame = closeGame;
+        window.deleteFile = deleteFile;
+        window.clearAllFiles = clearAllFiles;
+        window.toggleFavorite = toggleFavorite;
+        window.changeTheme = changeTheme;
+        window.showSettings = showSettings;
+        window.hideSettings = hideSettings;
+        window.showLibrary = showLibrary;
+        window.hideLibrary = hideLibrary;
+        window.showStats = showStats;
+        window.hideStats = hideStats;
+        window.showThemeCreator = showThemeCreator;
+        window.hideThemeCreator = hideThemeCreator;
+        window.updateFileList = updateFileList;
+        window.updateLibraryContent = updateLibraryContent;
+        window.updateStatsContent = updateStatsContent;
+        window.handleFileSelect = handleFileSelect;
+        window.handleDrop = handleDrop;
+        window.handleDragOver = handleDragOver;
+        window.handleDragLeave = handleDragLeave;
+        window.searchFiles = searchFiles;
+        window.sortFiles = sortFiles;
+        window.toggleViewMode = toggleViewMode;
+        window.toggleFullscreen = toggleFullscreen;
+        window.refreshGame = refreshGame;
+        window.showGameMenu = showGameMenu;
+        window.onGameLoad = onGameLoad;
+        window.toggleFPS = toggleFPS;
+        window.resetSettings = resetSettings;
+        window.exportSettings = exportSettings;
+        window.importSettings = importSettings;
+        window.exportStats = exportStats;
+        window.resetStats = resetStats;
+        window.setupThemeCreator = setupThemeCreator;
+        window.updateThemePreview = updateThemePreview;
+        window.resetTheme = resetTheme;
+        window.saveCustomTheme = saveCustomTheme;
+        window.toggleSidebar = toggleSidebar;
+        window.showFileOptions = showFileOptions;
+        window.searchLibrary = searchLibrary;
+        window.filterLibrary = filterLibrary;
+        window.showThemeSharing = showThemeSharing;
+        window.updateColorFromHSL = updateColorFromHSL;
+        
+        })(); // Close the IIFE
     </script>
 </body>
 </html>

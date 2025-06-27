@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLauncher Ultimate - Optimized for CodePen</title>
+    <meta name="description" content="GLauncher Ultimate - Upload, manage, and play HTML5 games with optimized performance for CodePen">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gaming-primary': 'hsl(var(--gaming-primary))',
+                        'gaming-secondary': 'hsl(var(--gaming-secondary))',
+                        'gaming-accent': 'hsl(var(--gaming-accent))',
+                        'gaming-surface': 'hsl(var(--gaming-surface))',
+                        'gaming-card': 'hsl(var(--gaming-card))',
+                        'gaming-border': 'hsl(var(--gaming-border))',
+                        'gaming-text': 'hsl(var(--gaming-text))',
+                        'gaming-dark': 'hsl(var(--gaming-dark))'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --gaming-primary: 280 100% 70%;
+            --gaming-secondary: 280 100% 80%;
+            --gaming-accent: 300 100% 70%;
+            --gaming-surface: 260 15% 8%;
+            --gaming-card: 258 20% 15%;
+            --gaming-border: 280 100% 70%;
+            --gaming-text: 285 25% 95%;
+            --gaming-dark: 260 15% 8%;
+        }
+
+        /* Performance optimizations for CodePen */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: hsl(var(--gaming-dark));
+            color: hsl(var(--gaming-text));
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            transform: translateZ(0);
+        }
+
+        .gaming-gradient {
+            background: linear-gradient(135deg, hsl(var(--gaming-primary)), hsl(var(--gaming-secondary)));
+        }
+
+        .game-card {
+            background: hsl(var(--gaming-card));
+            border: 1px solid hsl(var(--gaming-border) / 0.3);
+            transition: all 0.2s ease;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .game-card:hover {
+            border-color: hsl(var(--gaming-primary));
+            transform: translateY(-2px) translateZ(0);
+            box-shadow: 0 8px 16px hsl(var(--gaming-primary) / 0.2);
+        }
+
+        .upload-zone {
+            border: 2px dashed hsl(var(--gaming-border) / 0.5);
+            background: hsl(var(--gaming-surface));
+            transition: all 0.2s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: hsl(var(--gaming-primary));
+            background: hsl(var(--gaming-card));
+        }
+
+        .upload-zone.dragover {
+            border-color: hsl(var(--gaming-accent));
+            background: hsl(var(--gaming-primary) / 0.1);
+        }
+
+        .modal-overlay {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.8);
+            will-change: opacity;
+        }
+
+        .loading-spinner {
+            border: 2px solid hsl(var(--gaming-surface));
+            border-top: 2px solid hsl(var(--gaming-primary));
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Reduced animations for better performance */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: hsl(var(--gaming-primary));
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(var(--gaming-surface));
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: hsl(var(--gaming-primary));
+            border-radius: 3px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gaming-dark text-gaming-text">
+    <!-- Minimal particles for performance -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: -1;">
+        <div class="particle" style="left: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: -2s;"></div>
+    </div>
+
+    <div id="app">
+        <!-- Header -->
+        <header class="bg-gaming-surface border-b border-gaming-border p-4 sticky top-0 z-40">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 rounded-xl gaming-gradient flex items-center justify-center">
+                        <div class="text-lg font-black text-white">G</div>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gaming-text">GLauncher Ultimate</h1>
+                        <p class="text-sm text-gray-400">HTML5 Game Launcher</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400">Files: <span id="file-count" class="text-gaming-primary font-semibold">0</span></span>
+                    <button onclick="clearAllFiles()" class="px-3 py-1 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors">
+                        <i class="fas fa-trash-alt mr-1"></i>Clear All
+                    </button>
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-gaming-primary hover:bg-gaming-card rounded">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex h-[calc(100vh-4rem)]">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar w-80 bg-gaming-surface border-r border-gaming-border flex flex-col overflow-hidden">
+                <!-- Upload Section -->
+                <div class="p-6 border-b border-gaming-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold flex items-center">
+                            <i class="fas fa-upload mr-2 text-gaming-primary"></i>
+                            Upload Zone
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="showLibrary()" class="p-2 text-gray-400 hover:text-gaming-primary hover:bg-gaming-card rounded transition-colors" title="Library">
+                                <i class="fas fa-gamepad"></i>
+                            </button>
+                            <button onclick="showStats()" class="p-2 text-gray-400 hover:text-gaming-secondary hover:bg-gaming-card rounded transition-colors" title="Stats">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button onclick="showSettings()" class="p-2 text-gray-400 hover:text-gaming-accent hover:bg-gaming-card rounded transition-colors" title="Settings">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Zone -->
+                    <div class="upload-zone rounded-lg p-6 text-center cursor-pointer" 
+                         onclick="document.getElementById('file-input').click()" 
+                         ondrop="handleDrop(event)" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gaming-primary mb-3"></i>
+                        <h3 class="text-lg font-semibold mb-2">Drop Files Here</h3>
+                        <p class="text-sm text-gray-400 mb-3">HTML, ZIP files up to 50MB</p>
+                        <button class="px-4 py-2 gaming-gradient text-white font-medium rounded hover:opacity-90 transition-opacity">
+                            <i class="fas fa-folder-open mr-2"></i>Browse Files
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="file-input" accept=".html,.zip" multiple style="display: none;" onchange="handleFileSelect(event)">
+                    
+                    <!-- Upload Progress -->
+                    <div id="upload-progress" class="mt-4 hidden">
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span>Uploading...</span>
+                            <span id="upload-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-gaming-surface rounded-full h-2">
+                            <div id="upload-bar" class="gaming-gradient h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 space-y-1 text-xs text-gray-400">
+                        <div><i class="fas fa-info-circle mr-2 text-gaming-primary"></i>HTML & ZIP files supported</div>
+                        <div><i class="fas fa-shield-alt mr-2 text-gaming-secondary"></i>100% client-side processing</div>
+                    </div>
+                </div>
+
+                <!-- File List Section -->
+                <div class="flex-1 flex flex-col">
+                    <div class="p-4 border-b border-gaming-border">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-files mr-2 text-gaming-secondary"></i>Game Library
+                            </h3>
+                            <select id="sort-select" onchange="sortFiles(this.value)" class="px-2 py-1 bg-gaming-card border border-gaming-border rounded text-sm">
+                                <option value="name">Name</option>
+                                <option value="date">Date</option>
+                                <option value="size">Size</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Search Bar -->
+                        <div class="mt-3 relative">
+                            <input type="text" id="search-input" placeholder="Search games..." 
+                                   onkeyup="searchFiles(this.value)"
+                                   class="w-full px-3 py-2 pl-8 bg-gaming-card border border-gaming-border rounded text-sm focus:border-gaming-primary focus:outline-none">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="file-list" class="flex-1 overflow-y-auto p-4 space-y-3">
+                        <div class="text-center text-gray-400 py-8">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gaming-card flex items-center justify-center">
+                                <i class="fas fa-folder-open text-2xl text-gaming-primary"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">No Games Yet</h4>
+                            <p class="text-sm mb-4">Upload HTML or ZIP files to start</p>
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-4 py-2 gaming-gradient text-white rounded hover:opacity-90 transition-opacity">
+                                <i class="fas fa-plus mr-2"></i>Add Games
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Player Area -->
+            <main class="flex-1 bg-gaming-dark flex flex-col" id="game-area">
+                <div class="flex-1 p-4">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-indigo-900/20 rounded-lg overflow-hidden shadow-2xl border border-gaming-border flex items-center justify-center relative">
+                        <!-- Launch Screen -->
+                        <div class="text-center max-w-lg z-10 px-6">
+                            <!-- Logo -->
+                            <div class="relative w-32 h-32 mx-auto mb-8">
+                                <div class="absolute inset-0 rounded-full border-2 border-gaming-primary/30" style="animation: spin 20s linear infinite;"></div>
+                                <div class="absolute inset-2 rounded-full border border-gaming-secondary/40" style="animation: spin 15s linear infinite reverse;"></div>
+                                <div class="absolute inset-6 rounded-full gaming-gradient flex items-center justify-center shadow-xl">
+                                    <div class="text-4xl font-black text-white">G</div>
+                                </div>
+                            </div>
+                            
+                            <h2 class="text-4xl font-bold mb-4">
+                                <span class="bg-gradient-to-r from-gaming-primary to-gaming-secondary bg-clip-text text-transparent">
+                                    Ready to Launch
+                                </span>
+                            </h2>
+                            
+                            <p class="text-lg text-gaming-text/80 mb-8">
+                                Upload and play HTML5 games with advanced features and seamless performance.
+                            </p>
+                            
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-8 py-3 text-lg font-bold gaming-gradient text-white rounded-lg shadow-lg hover:opacity-90 transition-all duration-200 transform hover:scale-105">
+                                <i class="fas fa-rocket mr-2"></i>
+                                Launch Your Game
+                            </button>
+                            
+                            <div class="mt-8 grid grid-cols-3 gap-4 text-sm text-gaming-text/60">
+                                <div class="flex flex-col items-center p-3 rounded bg-gaming-surface/30">
+                                    <i class="fas fa-file-code text-xl mb-2 text-gaming-primary"></i>
+                                    <span>HTML5 Games</span>
+                                </div>
+                                <div class="flex flex-col items-center p-3 rounded bg-gaming-surface/30">
+                                    <i class="fas fa-archive text-xl mb-2 text-gaming-secondary"></i>
+                                    <span>ZIP Archives</span>
+                                </div>
+                                <div class="flex flex-col items-center p-3 rounded bg-gaming-surface/30">
+                                    <i class="fas fa-shield-alt text-xl mb-2 text-gaming-accent"></i>
+                                    <span>Secure Local</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Stats -->
+                            <div class="mt-8 flex justify-center space-x-6 text-sm text-gaming-text/50">
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-primary" id="total-games">0</div>
+                                    <div>Games</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-secondary" id="total-playtime">0h</div>
+                                    <div>Playtime</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-accent" id="session-games">0</div>
+                                    <div>Session</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-2xl bg-gaming-surface border border-gaming-border rounded-lg">
+                <div class="flex items-center justify-between p-4 border-b border-gaming-border">
+                    <h2 class="text-xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-cog mr-2 text-gaming-primary"></i>
+                        Settings
+                    </h2>
+                    <button onclick="hideSettings()" class="text-gray-400 hover:text-gaming-primary">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Theme</label>
+                        <select id="theme-select" onchange="changeTheme(this.value)" 
+                                class="w-full p-2 bg-gaming-card border border-gaming-border rounded">
+                            <option value="purple">Purple Magic</option>
+                            <option value="blue">Ocean Blue</option>
+                            <option value="green">Forest Green</option>
+                            <option value="red">Dragon Red</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">FPS Counter</label>
+                        <input type="checkbox" id="fps-toggle" onchange="toggleFPS(this.checked)" 
+                               class="w-4 h-4 text-gaming-primary">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium">Notifications</label>
+                        <input type="checkbox" id="notifications-toggle" checked 
+                               class="w-4 h-4 text-gaming-primary">
+                    </div>
+                    <div class="flex justify-end space-x-2 pt-4 border-t border-gaming-border">
+                        <button onclick="resetSettings()" 
+                                class="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded">
+                            Reset
+                        </button>
+                        <button onclick="hideSettings()" 
+                                class="px-4 py-2 gaming-gradient text-white rounded hover:opacity-90">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Library Modal -->
+    <div id="library-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-4xl h-[80vh] bg-gaming-surface border border-gaming-border rounded-lg flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gaming-border">
+                    <h2 class="text-xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-gamepad mr-2 text-gaming-primary"></i>
+                        Game Library
+                    </h2>
+                    <button onclick="hideLibrary()" class="text-gray-400 hover:text-gaming-primary">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex-1 p-4 overflow-y-auto">
+                    <div id="library-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Library content populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="fixed inset-0 z-50 hidden modal-overlay">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-2xl bg-gaming-surface border border-gaming-border rounded-lg">
+                <div class="flex items-center justify-between p-4 border-b border-gaming-border">
+                    <h2 class="text-xl font-bold text-gaming-text flex items-center">
+                        <i class="fas fa-chart-line mr-2 text-gaming-primary"></i>
+                        Statistics
+                    </h2>
+                    <button onclick="hideStats()" class="text-gray-400 hover:text-gaming-primary">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-4" id="stats-content">
+                    <!-- Stats content populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optimized for CodePen - Global state
+        let gameFiles = [];
+        let currentFile = null;
+        let gameStats = {
+            sessionTime: 0,
+            totalPlayTime: 0,
+            gamesPlayed: 0,
+            sessionGames: 0
+        };
+        let gameMetadata = {};
+        let settings = {
+            theme: 'purple',
+            fpsCounter: false,
+            notifications: true
+        };
+        let sessionStart = Date.now();
+        let playTimeInterval = null;
+        let currentSort = 'name';
+        let searchQuery = '';
+
+        // Theme system
+        const themes = {
+            purple: {
+                '--gaming-primary': '280 100% 70%',
+                '--gaming-secondary': '280 100% 80%',
+                '--gaming-accent': '300 100% 70%',
+                '--gaming-surface': '260 15% 8%',
+                '--gaming-card': '258 20% 15%',
+                '--gaming-border': '280 100% 70%',
+                '--gaming-text': '285 25% 95%',
+                '--gaming-dark': '260 15% 8%'
+            },
+            blue: {
+                '--gaming-primary': '200 100% 50%',
+                '--gaming-secondary': '200 100% 60%',
+                '--gaming-accent': '180 100% 50%',
+                '--gaming-surface': '220 39% 11%',
+                '--gaming-card': '215 28% 17%',
+                '--gaming-border': '200 100% 50%',
+                '--gaming-text': '210 40% 98%',
+                '--gaming-dark': '220 39% 11%'
+            },
+            green: {
+                '--gaming-primary': '120 100% 50%',
+                '--gaming-secondary': '120 100% 60%',
+                '--gaming-accent': '140 100% 50%',
+                '--gaming-surface': '120 20% 8%',
+                '--gaming-card': '125 25% 15%',
+                '--gaming-border': '120 100% 50%',
+                '--gaming-text': '125 25% 95%',
+                '--gaming-dark': '120 20% 8%'
+            },
+            red: {
+                '--gaming-primary': '0 100% 60%',
+                '--gaming-secondary': '0 100% 70%',
+                '--gaming-accent': '20 100% 60%',
+                '--gaming-surface': '0 20% 8%',
+                '--gaming-card': '5 25% 15%',
+                '--gaming-border': '0 100% 60%',
+                '--gaming-text': '5 25% 95%',
+                '--gaming-dark': '0 20% 8%'
+            }
+        };
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            if (!settings.notifications) return;
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                padding: 12px 16px;
+                background: hsl(var(--gaming-surface));
+                border: 1px solid hsl(var(--gaming-border));
+                border-radius: 6px;
+                color: hsl(var(--gaming-text));
+                font-size: 14px;
+                max-width: 300px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="margin-left: 12px; background: none; border: none; color: inherit; cursor: pointer;">
+                        ×
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+            });
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 3000);
+        }
+
+        // Data management
+        function loadSavedData() {
+            try {
+                const savedFiles = localStorage.getItem('glauncher-files');
+                const savedStats = localStorage.getItem('glauncher-stats');
+                const savedSettings = localStorage.getItem('glauncher-settings');
+                const savedMetadata = localStorage.getItem('glauncher-metadata');
+
+                if (savedFiles) gameFiles = JSON.parse(savedFiles);
+                if (savedStats) gameStats = { ...gameStats, ...JSON.parse(savedStats) };
+                if (savedSettings) settings = { ...settings, ...JSON.parse(savedSettings) };
+                if (savedMetadata) gameMetadata = JSON.parse(savedMetadata);
+
+                updateAllDisplays();
+                applySettings();
+            } catch (error) {
+                console.error('Failed to load saved data:', error);
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('glauncher-files', JSON.stringify(gameFiles));
+                localStorage.setItem('glauncher-stats', JSON.stringify(gameStats));
+                localStorage.setItem('glauncher-settings', JSON.stringify(settings));
+                localStorage.setItem('glauncher-metadata', JSON.stringify(gameMetadata));
+            } catch (error) {
+                console.error('Failed to save data:', error);
+            }
+        }
+
+        // File handling
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            processMultipleFiles(files);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            processMultipleFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+        }
+
+        function processMultipleFiles(files) {
+            if (files.length === 0) return;
+
+            const validFiles = files.filter(file => {
+                const validTypes = ['.html', '.zip'];
+                const isValidType = validTypes.some(type => file.name.toLowerCase().endsWith(type));
+                const isValidSize = file.size <= 50 * 1024 * 1024; // 50MB
+
+                if (!isValidType) {
+                    showNotification(`Invalid file type: ${file.name}`, 'error');
+                    return false;
+                }
+                if (!isValidSize) {
+                    showNotification(`File too large: ${file.name}`, 'error');
+                    return false;
+                }
+                return true;
+            });
+
+            if (validFiles.length === 0) return;
+
+            showUploadProgress();
+            let processed = 0;
+
+            validFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    processFile(file, () => {
+                        processed++;
+                        updateUploadProgress((processed / validFiles.length) * 100);
+                        
+                        if (processed === validFiles.length) {
+                            hideUploadProgress();
+                            showNotification(`Successfully uploaded ${processed} file(s)`, 'success');
+                            updateAllDisplays();
+                        }
+                    });
+                }, index * 50);
+            });
+        }
+
+        function processFile(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const gameFile = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadedAt: new Date().toISOString(),
+                    content: e.target.result,
+                    clientType: detectClientType(file.name)
+                };
+
+                gameFiles.push(gameFile);
+                
+                gameMetadata[gameFile.id] = {
+                    favorite: false,
+                    playCount: 0,
+                    lastPlayed: null,
+                    totalPlayTime: 0
+                };
+
+                saveData();
+                if (callback) callback();
+            };
+
+            reader.onerror = function() {
+                showNotification(`Failed to process file: ${file.name}`, 'error');
+                if (callback) callback();
+            };
+
+            reader.readAsText(file);
+        }
+
+        function detectClientType(filename) {
+            const name = filename.toLowerCase();
+            if (name.includes('eaglercraft')) return 'Eaglercraft';
+            if (name.includes('minecraft')) return 'Minecraft';
+            return 'HTML5 Game';
+        }
+
+        // Progress system
+        function showUploadProgress() {
+            document.getElementById('upload-progress').classList.remove('hidden');
+        }
+
+        function updateUploadProgress(percent) {
+            document.getElementById('upload-percent').textContent = Math.round(percent) + '%';
+            document.getElementById('upload-bar').style.width = percent + '%';
+        }
+
+        function hideUploadProgress() {
+            setTimeout(() => {
+                document.getElementById('upload-progress').classList.add('hidden');
+            }, 1000);
+        }
+
+        // File list management
+        function updateFileList() {
+            const fileList = document.getElementById('file-list');
+            let filteredFiles = [...gameFiles];
+
+            if (searchQuery) {
+                filteredFiles = filteredFiles.filter(file => 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+
+            filteredFiles.sort((a, b) => {
+                switch (currentSort) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'date':
+                        return new Date(b.uploadedAt) - new Date(a.uploadedAt);
+                    case 'size':
+                        return b.size - a.size;
+                    default:
+                        return 0;
+                }
+            });
+
+            if (filteredFiles.length === 0) {
+                fileList.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gaming-card flex items-center justify-center">
+                            <i class="fas fa-${searchQuery ? 'search' : 'folder-open'} text-2xl text-gaming-primary"></i>
+                        </div>
+                        <h4 class="font-semibold mb-2">${searchQuery ? 'No Results' : 'No Games Yet'}</h4>
+                        <p class="text-sm mb-4">${searchQuery ? 'Try a different search' : 'Upload files to start'}</p>
+                        ${!searchQuery ? `
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-4 py-2 gaming-gradient text-white rounded hover:opacity-90">
+                                <i class="fas fa-plus mr-2"></i>Add Games
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            fileList.innerHTML = filteredFiles.map(file => {
+                const metadata = gameMetadata[file.id] || {};
+                return `
+                    <div class="game-card rounded-lg p-3 cursor-pointer" onclick="playGame(${file.id})">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-medium text-gaming-text truncate">${file.name}</h3>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-xs px-2 py-1 bg-gaming-primary/20 text-gaming-primary rounded">
+                                        ${file.clientType}
+                                    </span>
+                                    ${metadata.favorite ? '<i class="fas fa-heart text-yellow-400 text-xs"></i>' : ''}
+                                </div>
+                            </div>
+                            <button onclick="event.stopPropagation(); deleteFile(${file.id})" 
+                                    class="p-1 text-red-400 hover:text-red-300">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="text-xs text-gray-400 mb-2">
+                            <div>Size: ${formatFileSize(file.size)}</div>
+                            <div>Uploaded: ${new Date(file.uploadedAt).toLocaleDateString()}</div>
+                        </div>
+                        
+                        <button class="w-full py-2 gaming-gradient text-white rounded text-sm font-medium hover:opacity-90 transition-opacity">
+                            <i class="fas fa-play mr-1"></i>Play
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function searchFiles(query) {
+            searchQuery = query;
+            updateFileList();
+        }
+
+        function sortFiles(sortBy) {
+            currentSort = sortBy;
+            updateFileList();
+        }
+
+        // Game playing
+        function playGame(id) {
+            const file = gameFiles.find(f => f.id === id);
+            if (!file) return;
+
+            currentFile = file;
+            const metadata = gameMetadata[id] || {};
+            
+            metadata.playCount = (metadata.playCount || 0) + 1;
+            metadata.lastPlayed = new Date().toISOString();
+            gameMetadata[id] = metadata;
+            
+            gameStats.gamesPlayed++;
+            gameStats.sessionGames++;
+
+            const gameArea = document.getElementById('game-area');
+            gameArea.innerHTML = `
+                <div class="bg-gaming-surface border-b border-gaming-border p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div>
+                                <h2 class="font-semibold text-gaming-text flex items-center gap-2">
+                                    ${file.name}
+                                    <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">LIVE</span>
+                                </h2>
+                                <div class="text-sm text-gaming-text/70">
+                                    Session: <span id="play-time" class="text-gaming-primary">0:00</span>
+                                    • Plays: ${metadata.playCount || 0}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleFullscreen()" class="p-2 text-gaming-text/70 hover:text-gaming-primary" title="Fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button onclick="closeGame()" class="p-2 text-gaming-text/70 hover:text-red-400" title="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 p-4">
+                    <div class="w-full h-full bg-black rounded-lg overflow-hidden border border-gaming-border relative">
+                        <iframe id="game-iframe" 
+                                src="data:text/html;charset=utf-8,${encodeURIComponent(file.content)}" 
+                                class="w-full h-full border-0" 
+                                title="${file.name}"
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation"
+                                allowfullscreen>
+                        </iframe>
+                        
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded text-sm opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
+                            <i class="fas fa-keyboard mr-1"></i>Click to focus • F11 for fullscreen
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            startPlayTimeTracking();
+            saveData();
+        }
+
+        function startPlayTimeTracking() {
+            let startTime = Date.now();
+            
+            playTimeInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                const playTimeElement = document.getElementById('play-time');
+                if (playTimeElement) {
+                    playTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                if (currentFile && gameMetadata[currentFile.id]) {
+                    gameMetadata[currentFile.id].totalPlayTime = elapsed;
+                }
+            }, 1000);
+        }
+
+        function closeGame() {
+            if (playTimeInterval) {
+                clearInterval(playTimeInterval);
+                playTimeInterval = null;
+            }
+
+            if (currentFile && gameMetadata[currentFile.id]) {
+                const totalTime = gameMetadata[currentFile.id].totalPlayTime || 0;
+                gameStats.totalPlayTime += totalTime;
+                gameStats.sessionTime += totalTime;
+            }
+
+            currentFile = null;
+            showLaunchScreen();
+            saveData();
+        }
+
+        function showLaunchScreen() {
+            const gameArea = document.getElementById('game-area');
+            gameArea.innerHTML = `
+                <div class="flex-1 p-4">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-indigo-900/20 rounded-lg overflow-hidden shadow-2xl border border-gaming-border flex items-center justify-center relative">
+                        <div class="text-center max-w-lg z-10 px-6">
+                            <div class="relative w-32 h-32 mx-auto mb-8">
+                                <div class="absolute inset-0 rounded-full border-2 border-gaming-primary/30" style="animation: spin 20s linear infinite;"></div>
+                                <div class="absolute inset-2 rounded-full border border-gaming-secondary/40" style="animation: spin 15s linear infinite reverse;"></div>
+                                <div class="absolute inset-6 rounded-full gaming-gradient flex items-center justify-center shadow-xl">
+                                    <div class="text-4xl font-black text-white">G</div>
+                                </div>
+                            </div>
+                            <h2 class="text-4xl font-bold mb-4">
+                                <span class="bg-gradient-to-r from-gaming-primary to-gaming-secondary bg-clip-text text-transparent">
+                                    Ready to Launch
+                                </span>
+                            </h2>
+                            <p class="text-lg text-gaming-text/80 mb-8">
+                                Upload and play HTML5 games with advanced features.
+                            </p>
+                            <button onclick="document.getElementById('file-input').click()" 
+                                    class="px-8 py-3 text-lg font-bold gaming-gradient text-white rounded-lg shadow-lg hover:opacity-90 transition-all duration-200 transform hover:scale-105">
+                                <i class="fas fa-rocket mr-2"></i>Launch Your Game
+                            </button>
+                            <div class="mt-8 flex justify-center space-x-6 text-sm text-gaming-text/50">
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-primary">${gameFiles.length}</div>
+                                    <div>Games</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-secondary">${Math.floor(gameStats.totalPlayTime / 3600)}h</div>
+                                    <div>Playtime</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-gaming-accent">${gameStats.sessionGames}</div>
+                                    <div>Session</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function deleteFile(id) {
+            if (confirm('Delete this game?')) {
+                gameFiles = gameFiles.filter(file => file.id !== id);
+                delete gameMetadata[id];
+                updateAllDisplays();
+                saveData();
+                showNotification('Game deleted', 'success');
+            }
+        }
+
+        function clearAllFiles() {
+            if (confirm('Delete all games? This cannot be undone.')) {
+                gameFiles = [];
+                gameMetadata = {};
+                updateAllDisplays();
+                saveData();
+                closeGame();
+                showNotification('All games cleared', 'success');
+            }
+        }
+
+        // Theme system
+        function changeTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) return;
+
+            const root = document.documentElement;
+            Object.entries(theme).forEach(([property, value]) => {
+                root.style.setProperty(property, value);
+            });
+
+            settings.theme = themeName;
+            saveData();
+            showNotification(`Theme changed to ${themeName}`, 'success');
+        }
+
+        function applySettings() {
+            changeTheme(settings.theme);
+            document.getElementById('theme-select').value = settings.theme;
+            document.getElementById('fps-toggle').checked = settings.fpsCounter;
+            document.getElementById('notifications-toggle').checked = settings.notifications;
+        }
+
+        // Modal functions
+        function showSettings() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function hideSettings() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        }
+
+        function showLibrary() {
+            updateLibraryContent();
+            document.getElementById('library-modal').classList.remove('hidden');
+        }
+
+        function hideLibrary() {
+            document.getElementById('library-modal').classList.add('hidden');
+        }
+
+        function showStats() {
+            updateStatsContent();
+            document.getElementById('stats-modal').classList.remove('hidden');
+        }
+
+        function hideStats() {
+            document.getElementById('stats-modal').classList.add('hidden');
+        }
+
+        function updateLibraryContent() {
+            const content = document.getElementById('library-content');
+            
+            if (gameFiles.length === 0) {
+                content.innerHTML = `
+                    <div class="col-span-full text-center text-gray-400 py-8">
+                        <i class="fas fa-gamepad text-4xl mb-4"></i>
+                        <p>No games in library</p>
+                    </div>
+                `;
+                return;
+            }
+
+            content.innerHTML = gameFiles.map(file => {
+                const metadata = gameMetadata[file.id] || {};
+                return `
+                    <div class="game-card rounded-lg p-4">
+                        <h3 class="font-semibold text-gaming-text mb-2">${file.name}</h3>
+                        <div class="text-sm text-gray-400 mb-3">
+                            <div>Size: ${formatFileSize(file.size)}</div>
+                            <div>Plays: ${metadata.playCount || 0}</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="playGame(${file.id}); hideLibrary();" 
+                                    class="flex-1 py-2 gaming-gradient text-white rounded text-sm hover:opacity-90">
+                                Play
+                            </button>
+                            <button onclick="deleteFile(${file.id}); updateLibraryContent();" 
+                                    class="px-3 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStatsContent() {
+            const content = document.getElementById('stats-content');
+            const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
+            
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3">Current Session</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gaming-card p-4 rounded text-center">
+                                <div class="text-2xl font-bold text-gaming-primary">${Math.floor(sessionTime / 60)}:${(sessionTime % 60).toString().padStart(2, '0')}</div>
+                                <div class="text-sm text-gray-400">Session Time</div>
+                            </div>
+                            <div class="bg-gaming-card p-4 rounded text-center">
+                                <div class="text-2xl font-bold text-gaming-secondary">${gameStats.sessionGames}</div>
+                                <div class="text-sm text-gray-400">Games Played</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3">All Time</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gaming-card p-4 rounded text-center">
+                                <div class="text-2xl font-bold text-gaming-accent">${gameStats.gamesPlayed}</div>
+                                <div class="text-sm text-gray-400">Total Games</div>
+                            </div>
+                            <div class="bg-gaming-card p-4 rounded text-center">
+                                <div class="text-2xl font-bold text-yellow-400">${Math.floor(gameStats.totalPlayTime / 3600)}h</div>
+                                <div class="text-sm text-gray-400">Total Playtime</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between pt-4 border-t border-gaming-border">
+                        <button onclick="resetStats()" 
+                                class="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 rounded">
+                            Reset Stats
+                        </button>
+                        <button onclick="hideStats()" 
+                                class="px-4 py-2 gaming-gradient text-white rounded hover:opacity-90">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetStats() {
+            if (confirm('Reset all statistics?')) {
+                gameStats = { sessionTime: 0, totalPlayTime: 0, gamesPlayed: 0, sessionGames: 0 };
+                Object.keys(gameMetadata).forEach(id => {
+                    gameMetadata[id] = { ...gameMetadata[id], playCount: 0, lastPlayed: null, totalPlayTime: 0 };
+                });
+                updateStatsContent();
+                saveData();
+                showNotification('Statistics reset', 'success');
+            }
+        }
+
+        function resetSettings() {
+            if (confirm('Reset all settings?')) {
+                settings = { theme: 'purple', fpsCounter: false, notifications: true };
+                applySettings();
+                saveData();
+                showNotification('Settings reset', 'success');
+            }
+        }
+
+        function toggleFPS(enabled) {
+            settings.fpsCounter = enabled;
+            saveData();
+            showNotification(`FPS counter ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('game-iframe');
+            if (!iframe) return;
+
+            if (!document.fullscreenElement) {
+                iframe.requestFullscreen().catch(err => {
+                    showNotification('Fullscreen not supported', 'error');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function updateAllDisplays() {
+            updateFileList();
+            updateQuickStats();
+        }
+
+        function updateQuickStats() {
+            const elements = {
+                'file-count': gameFiles.length,
+                'total-games': gameFiles.length,
+                'total-playtime': Math.floor(gameStats.totalPlayTime / 3600) + 'h',
+                'session-games': gameStats.sessionGames
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F11') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-overlay')) {
+                    e.target.classList.add('hidden');
+                }
+            });
+
+            setTimeout(() => {
+                showNotification('Welcome to GLauncher Ultimate!', 'success');
+            }, 1000);
+        });
+
+        // Auto-save periodically
+        setInterval(saveData, 60000); // Save every minute
+    </script>
+</body>
+</html>
