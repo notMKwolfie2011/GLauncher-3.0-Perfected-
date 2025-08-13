@@ -1,0 +1,332 @@
+
+2e7f965
+ · 
+6 minutes ago
+4fe3c945233036e22be0f2668ffb5b0f
+I'm done for now
+13 minutes ago
+App.tsx
+yowza that's alot of files
+16 minutes ago
+LICENSE
+Initial commit
+32 minutes ago
+Pixel-Client-1.8.9_1749276948305.zip
+yowza that's alot of files
+16 minutes ago
+README.md
+Update README.md
+6 minutes ago
+Screenshot 2025-06-01 7.29.18 AM.png
+yowza that's alot of files
+16 minutes ago
+Screenshot 2025-06-01 7.44.56 AM.png
+yowza that's alot of files
+16 minutes ago
+Screenshot 2025-06-01 9.31.18 AM.png
+yowza that's alot of files
+16 minutes ago
+Screenshot 2025-06-01 9.35.59 AM.png
+yowza that's alot of files
+16 minutes ago
+Screenshot 2025-06-01 9.44.38 AM.png
+yowza that's alot of files
+16 minutes ago
+Screenshot 2025-06-07 2.22.57 AM_1749277382346.png
+yowza that's alot of files
+16 minutes ago
+a1b80c6ecd284f02c2f2a2b797462fbd
+I'm done for now
+13 minutes ago
+accordion.tsx
+yowza that's alot of files
+16 minutes ago
+alert-dialog.tsx
+yowza that's alot of files
+16 minutes ago
+alert.tsx
+yowza that's alot of files
+16 minutes ago
+animated-settings-panel.tsx
+yowza that's alot of files
+16 minutes ago
+app-header.tsx
+yowza that's alot of files
+16 minutes ago
+aspect-ratio.tsx
+yowza that's alot of files
+16 minutes ago
+avatar.tsx
+yowza that's alot of files
+16 minutes ago
+badge.tsx
+yowza that's alot of files
+16 minutes ago
+breadcrumb.tsx
+yowza that's alot of files
+16 minutes ago
+button.tsx
+yowza that's alot of files
+16 minutes ago
+c198a7394cdd8a5c16f8fa6f4838a376
+I'm done for now
+13 minutes ago
+calendar.tsx
+yowza that's alot of files
+16 minutes ago
+card.tsx
+yowza that's alot of files
+16 minutes ago
+carousel.tsx
+yowza that's alot of files
+16 minutes ago
+chart.tsx
+yowza that's alot of files
+16 minutes ago
+checkbox.tsx
+yowza that's alot of files
+16 minutes ago
+client-detector.ts
+I'm done for now
+13 minutes ago
+client-info-badge.tsx
+yowza that's alot of files
+16 minutes ago
+collapsible.tsx
+yowza that's alot of files
+16 minutes ago
+command.tsx
+yowza that's alot of files
+16 minutes ago
+community-themes-browser.tsx
+yowza that's alot of files
+16 minutes ago
+components.json
+yowza that's alot of files
+16 minutes ago
+context-menu.tsx
+yowza that's alot of files
+16 minutes ago
+dialog.tsx
+yowza that's alot of files
+16 minutes ago
+drawer.tsx
+yowza that's alot of files
+16 minutes ago
+drizzle.config.ts
+yowza that's alot of files
+16 minutes ago
+dropdown-menu.tsx
+yowza that's alot of files
+16 minutes ago
+enhanced-game-player.tsx
+yowza that's alot of files
+16 minutes ago
+extraction-progress.tsx
+yowza that's alot of files
+16 minutes ago
+file-list.tsx
+yowza that's alot of files
+16 minutes ago
+file-upload-zone.tsx
+yowza that's alot of files
+16 minutes ago
+form.tsx
+yowza that's alot of files
+16 minutes ago
+game-library-panel.tsx
+yowza that's alot of files
+16 minutes ago
+game-player.tsx
+yowza that's alot of files
+16 minutes ago
+game-stats-panel.tsx
+yowza that's alot of files
+16 minutes ago
+generated-icon.png
+yowza that's alot of files
+16 minutes ago
+glauncher-codepen-optimized.html
+yowza that's alot of files
+16 minutes ago
+glauncher-complete.html
+yowza that's alot of files
+16 minutes ago
+glauncher-ultimate.html
+yowza that's alot of files
+16 minutes ago
+home.tsx
+yowza that's alot of files
+16 minutes ago
+hover-card.tsx
+yowza that's alot of files
+16 minutes ago
+hvtrs8_-fklgs,mwlvioc,opg-dmwllmafs-mwlvioc]1,6_1,dgb_1749286777483
+yowza that's alot of files
+16 minutes ago
+index.css
+yowza that's alot of files
+16 minutes ago
+index.html
+yowza that's alot of files
+16 minutes ago
+index.ts
+I'm done for now
+13 minutes ago
+input-otp.tsx
+yowza that's alot of files
+16 minutes ago
+input.tsx
+yowza that's alot of files
+16 minutes ago
+label.tsx
+yowza that's alot of files
+16 minutes ago
+main.tsx
+yowza that's alot of files
+16 minutes ago
+menubar.tsx
+yowza that's alot of files
+16 minutes ago
+navigation-menu.tsx
+yowza that's alot of files
+16 minutes ago
+not-found.tsx
+yowza that's alot of files
+16 minutes ago
+package-lock.json
+yowza that's alot of files
+16 minutes ago
+package.json
+yowza that's alot of files
+16 minutes ago
+pagination.tsx
+yowza that's alot of files
+16 minutes ago
+popover.tsx
+yowza that's alot of files
+16 minutes ago
+postcss.config.js
+yowza that's alot of files
+16 minutes ago
+progress.tsx
+yowza that's alot of files
+16 minutes ago
+queryClient.ts
+yowza that's alot of files
+16 minutes ago
+radio-group.tsx
+yowza that's alot of files
+16 minutes ago
+replit.md
+yowza that's alot of files
+16 minutes ago
+resizable.tsx
+yowza that's alot of files
+16 minutes ago
+routes.ts
+yowza that's alot of files
+16 minutes ago
+scroll-area.tsx
+yowza that's alot of files
+16 minutes ago
+select.tsx
+yowza that's alot of files
+16 minutes ago
+separator.tsx
+yowza that's alot of files
+16 minutes ago
+settings-panel-fixed.tsx
+yowza that's alot of files
+16 minutes ago
+settings-panel.tsx
+yowza that's alot of files
+16 minutes ago
+sheet.tsx
+yowza that's alot of files
+16 minutes ago
+sidebar.tsx
+yowza that's alot of files
+16 minutes ago
+skeleton.tsx
+yowza that's alot of files
+16 minutes ago
+slider.tsx
+yowza that's alot of files
+16 minutes ago
+storage.ts
+yowza that's alot of files
+16 minutes ago
+switch.tsx
+yowza that's alot of files
+16 minutes ago
+table.tsx
+yowza that's alot of files
+16 minutes ago
+tabs.tsx
+yowza that's alot of files
+16 minutes ago
+tailwind.config.ts
+yowza that's alot of files
+16 minutes ago
+textarea.tsx
+yowza that's alot of files
+16 minutes ago
+theme-creator-modal.tsx
+yowza that's alot of files
+16 minutes ago
+theme-creator.tsx
+yowza that's alot of files
+16 minutes ago
+theme-sharing-modal.tsx
+yowza that's alot of files
+16 minutes ago
+toast.tsx
+yowza that's alot of files
+16 minutes ago
+toaster.tsx
+yowza that's alot of files
+16 minutes ago
+toggle-group.tsx
+yowza that's alot of files
+16 minutes ago
+toggle.tsx
+yowza that's alot of files
+16 minutes ago
+tooltip.tsx
+yowza that's alot of files
+16 minutes ago
+tsconfig.json
+yowza that's alot of files
+16 minutes ago
+use-files.ts
+yowza that's alot of files
+16 minutes ago
+use-mobile.tsx
+yowza that's alot of files
+16 minutes ago
+use-toast.ts
+yowza that's alot of files
+16 minutes ago
+utils.ts
+yowza that's alot of files
+16 minutes ago
+vite.config.ts
+yowza that's alot of files
+16 minutes ago
+vite.ts
+yowza that's alot of files
+16 minutes ago
+zip-analysis-panel.tsx
+yowza that's alot of files
+16 minutes ago
+zip-validator.ts
+yowza that's alot of files
+16 minutes ago
+Repository files navigation
+README
+MIT license
+GLauncher-3.0-Perfected-
+I Perfected it this will probably be my last version of Glauncher thx for everything
+
+DISCLAIMER: this was made with ai so i have no idea what some of the files deep in the folders even are
