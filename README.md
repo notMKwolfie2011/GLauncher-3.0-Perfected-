@@ -23,12 +23,8 @@ npm run dev:codespaces
 # Or use the standard dev command (port 5000)
 npm run dev
 
-#Perm fix for page errors (port 8000)
-export PORT=8000
-npm run dev
-
-#Run ig idk anymore ima try it tho (both ports)
-/start-codespaces.sh
+# Permanent fix for GitHub Codespaces (port 8000 with database)
+PORT=8000 DATABASE_URL="postgresql://neondb_owner:npg_mlDpIK9NVL2U@ep-autumn-union-af7eudqw.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require" npm run dev
 ```
 
 ## 🎮 Features
