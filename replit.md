@@ -109,8 +109,32 @@ GLauncher is a full-stack web application that allows users to upload, manage, a
 - `DATABASE_URL`: PostgreSQL connection string (required)
 - `NODE_ENV`: Environment setting (development/production)
 
+## Recent Updates (August 13, 2025)
+
+### Advanced Features Added
+- **Enhanced Iframe Monitoring**: Automatic detection and handling of downloads from games running in iframe
+- **External Link Management**: Smart handling of external links opening in new browser tabs instead of within iframe
+- **Advanced Game Analytics Panel**: Real-time performance monitoring with AI-powered insights, FPS tracking, memory usage, and exportable analytics
+- **Live Streaming & Recording Panel**: Screen capture, live streaming simulation, recording controls, and stream sharing capabilities
+- **GitHub Codespaces Support**: Complete configuration for one-click development environment setup on port 8000
+- **Screenshot & Recording**: Advanced screenshot capture and gameplay recording functionality
+- **Advanced Controls**: Volume control, screen mode switching (desktop/mobile), and enhanced iframe controls
+
+### Deployment Infrastructure
+- **GitHub Codespaces**: Pre-configured devcontainer with Node.js 20, automatic port forwarding, and VS Code extensions
+- **GitHub Actions**: Automated CI/CD pipeline for deployment to GitHub Pages
+- **Multi-Environment Support**: Configurable for both Replit (port 5000) and Codespaces (port 8000) environments
+- **CodePen Optimized**: Ultimate standalone HTML version with all advanced features for CodePen deployment
+
+### Technical Enhancements
+- **Advanced Iframe Communication**: Cross-origin content monitoring and interaction
+- **Performance Monitoring**: Real-time FPS counting, memory usage tracking, and session analytics
+- **Mobile Responsive**: Fully optimized for all screen sizes with adaptive layouts
+- **Theme System**: Enhanced with community sharing and real-time preview capabilities
+
 ## Changelog
-- June 27, 2025. Initial setup
+- August 13, 2025: Added advanced iframe capabilities, GitHub Codespaces support, analytics panel, streaming panel, and deployment infrastructure
+- June 27, 2025: Initial setup
 
 ## User Preferences
 
