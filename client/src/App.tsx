@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 
-// Secret code: d29sZmllIHdheiBoZXJlIDpE
+// Secret code translate this: d29sZmllIHdheiBoZXJlIDpE
 
 function Router() {
   return (
