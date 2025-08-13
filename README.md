@@ -22,6 +22,10 @@ npm run dev:codespaces
 
 # Or use the standard dev command (port 5000)
 npm run dev
+
+#Perm fix for page errors (port 8000)
+export PORT=8000
+npm run dev
 ```
 
 ## 🎮 Features
