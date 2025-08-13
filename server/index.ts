@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 
   // Support both Replit (5000) and GitHub Codespaces (8000)
   // Configurable for different deployment environments
-  const port = process.env.PORT || process.env.CODESPACE_NAME ? 8000 : 5000;
+  const port = parseInt(process.env.PORT || (process.env.CODESPACE_NAME ? "8000" : "5000"), 10);
   server.listen({
     port,
     host: "0.0.0.0",
