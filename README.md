@@ -1,4 +1,8 @@
+# DISCLAIMER: this was made with ai so i have no idea what some of the files deep in the folders even are
+
 # GLauncher 3.0 - Ultimate HTML5 Game Launcher
+
+I Perfected it this will probably be my last version of Glauncher thx for everything
 
 GLauncher is an advanced web-based platform for seamless game file management, upload, and interactive gameplay. Built with modern web technologies and optimized for both development and production environments.
 
