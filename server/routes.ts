@@ -420,7 +420,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let filePath = '';
 
       // Find the file in the extracted directory structure
-      function findFileRecursively(dir: string, targetFile: string): string | null {
+      const findFileRecursively = (dir: string, targetFile: string): string | null => {
         const files = fs.readdirSync(dir, { withFileTypes: true });
 
         for (const file of files) {
@@ -434,7 +434,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         }
         return null;
-      }
+      };
 
       const foundPath = findFileRecursively(searchPath, filename);
       if (!foundPath) {
@@ -588,12 +588,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         </div>
 
         ${jarFiles.map(f => `
-            <a href="/api/files/${fileId}/download/${encodeURIComponent(f)}" class="download-btn">
+            <a href="/api/files/${fileId}/download/${encodeURIComponent(f.toString())}" class="download-btn">
                 📥 Download ${f}
             </a>
         `).join('')}
         ${jsonFiles.map(f => `
-            <a href="/api/files/${fileId}/download/${encodeURIComponent(f)}" class="download-btn">
+            <a href="/api/files/${fileId}/download/${encodeURIComponent(f.toString())}" class="download-btn">
                 📄 Download ${f}
             </a>
         `).join('')}
