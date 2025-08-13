@@ -57,8 +57,13 @@ app.use((req, res, next) => {
   }
 
   // Support both Replit (5000) and GitHub Codespaces (8000)
-  // Configurable for different deployment environments
-  const port = parseInt(process.env.PORT || (process.env.CODESPACE_NAME ? "8000" : "5000"), 10);
+  // Auto-detect environment: Codespaces uses specific env vars
+  const isCodespaces = process.env.CODESPACES === 'true' || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+  const defaultPort = isCodespaces ? "8000" : "5000";
+  const port = parseInt(process.env.PORT || defaultPort, 10);
+  
+  console.log(`🌍 Environment: ${isCodespaces ? 'GitHub Codespaces' : 'Replit'}`);
+  console.log(`🚀 Starting server on port ${port}`);
   server.listen({
     port,
     host: "0.0.0.0",
