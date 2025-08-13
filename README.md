@@ -26,6 +26,9 @@ npm run dev
 #Perm fix for page errors (port 8000)
 export PORT=8000
 npm run dev
+
+#Run ig idk anymore ima try it tho (both ports)
+/start-codespaces.sh
 ```
 
 ## 🎮 Features
