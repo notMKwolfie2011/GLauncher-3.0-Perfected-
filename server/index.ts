@@ -57,13 +57,11 @@ app.use((req, res, next) => {
   }
 
   // Support both Replit (5000) and GitHub Codespaces (8000)
-  // Auto-detect environment: Codespaces uses specific env vars
-  const isCodespaces = process.env.CODESPACES === 'true' || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
-  const defaultPort = isCodespaces ? "8000" : "5000";
-  const port = parseInt(process.env.PORT || defaultPort, 10);
+  // Force port 8000 if explicitly requested via PORT env var
+  const port = parseInt(process.env.PORT || "5000", 10);
   
-  console.log(`🌍 Environment: ${isCodespaces ? 'GitHub Codespaces' : 'Replit'}`);
-  console.log(`🚀 Starting server on port ${port}`);
+  console.log(`🚀 Starting GLauncher server on port ${port}`);
+  console.log(`🌐 Server will be accessible at http://0.0.0.0:${port}`);
   server.listen({
     port,
     host: "0.0.0.0",
