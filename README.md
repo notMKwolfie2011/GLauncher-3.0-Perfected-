@@ -177,7 +177,7 @@ The `.devcontainer/devcontainer.json` includes:
 
 ## 📄 License
 
-MIT License - feel free to use this project for personal or commercial purposes.
+WOLF License - feel free to use this project for personal or commercial use but request permission from me first for any edits and include this license in all versions blocking use of this project is restricted.
 
 ## 🆘 Support
 
