@@ -2,16 +2,16 @@ SOFTWARE LICENSE AGREEMENT
 
 Copyright (c) 2025 notMKwolfie2011
 
-This Software License Agreement (“Agreement”) governs the use, distribution, reproduction, and commercialization of the software and associated documentation files (the “Software”), including all beta versions, and all official versions (including but not limited to version 1.0, version 2.0, and subsequent releases) of GLauncher, authored by notMKwolfie2011 (“Author”).
+This Software License Agreement (“Agreement”) governs the use, distribution, reproduction, and commercialization of the software and associated documentation files (the “Software”), including all beta versions, all official versions (including but not limited to version 1.0, version 2.0, and subsequent releases), and all unofficial versions of GLauncher, authored by notMKwolfie2011 (“Author”).
 
 1. DEFINITIONS  
-  a. “Software” refers to the codebase, associated files, documentation, all beta versions, and all official versions of GLauncher (including but not limited to version 1.0, version 2.0, and future versions) released under this Agreement.  
+  a. “Software” refers to the codebase, associated files, documentation, all beta versions, all official versions of GLauncher (including but not limited to version 1.0, version 2.0, and future versions), and all unofficial versions derived from or distributed as GLauncher, released under this Agreement.  
   b. “User” refers to any individual or entity obtaining a copy of the Software.  
   c. “Commercial Use” refers to any use of the Software intended for monetary gain, including but not limited to selling, licensing, providing paid services, or integrating into commercial products.  
   d. “Net Profits” refers to gross revenue generated from Commercial Use of the Software, less direct costs incurred in generating such revenue.
 
 2. GRANT OF RIGHTS  
-  a. Subject to the terms and conditions of this Agreement, the Author hereby grants the User a limited, non-exclusive, royalty-free (except as specified in Section 5), and revocable right to use, copy, and distribute unmodified copies of the Software, including beta and official versions.  
+  a. Subject to the terms and conditions of this Agreement, the Author hereby grants the User a limited, non-exclusive, royalty-free (except as specified in Section 5), and revocable right to use, copy, and distribute unmodified copies of the Software, including beta, official, and unofficial versions.  
   b. The User may not sublicense, rent, lease, or otherwise transfer the Software except as expressly permitted herein.
 
 3. RESTRICTIONS  
@@ -20,10 +20,10 @@ This Software License Agreement (“Agreement”) governs the use, distribution,
   c. The User must retain and reproduce this copyright notice and all disclaimers in all copies of the Software, whether distributed electronically or in physical form.  
   d. The User must provide clear attribution to the Author (“notMKwolfie2011”) in all distributed copies.
 
-4. BETA VERSIONS AND OFFICIAL RELEASES  
-  a. All terms and restrictions herein apply equally to beta versions and official releases of the Software, including but not limited to version 1.0, version 2.0, and future versions.  
+4. BETA VERSIONS, OFFICIAL RELEASES, AND UNOFFICIAL VERSIONS  
+  a. All terms and restrictions herein apply equally to beta versions, official releases (including but not limited to version 1.0, version 2.0, and future versions), and unofficial versions of the Software.  
   b. Beta versions are provided “as is,” and may be incomplete, unstable, or contain errors. Use of beta versions is at the User’s sole risk.  
-  c. Official versions are provided “as is,” and without warranty as described in Section 6.
+  c. Official and unofficial versions are provided “as is,” and without warranty as described in Section 6.
 
 5. COMMERCIAL USE AND PROFIT-SHARING  
   a. Commercial use of the Software is permitted under the express condition that the User shall pay the Author a royalty equal to **ten percent (10%) of all Net Profits** derived from such use.  
@@ -31,16 +31,20 @@ This Software License Agreement (“Agreement”) governs the use, distribution,
   c. Royalties must be paid to the Author quarterly, within thirty (30) days of the end of each calendar quarter, unless otherwise agreed in writing.  
   d. Failure to pay the required royalty constitutes a material breach of this Agreement and will result in immediate termination of all rights granted herein.
 
-6. DISCLAIMER  
+6. NON-RESTRICTION OF ACCESS  
+  a. No party, including but not limited to distributors, service providers, network administrators, software vendors, organizations, institutions, or individuals, may restrict, block, filter, or otherwise prevent access to the Software, in whole or in part, regardless of version (official, beta, or unofficial), by any technical, legal, administrative, or policy means.  
+  b. Any attempt to restrict access to the Software is expressly prohibited and constitutes a material breach of this Agreement.
+
+7. DISCLAIMER  
   THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-7. TERMINATION  
+8. TERMINATION  
   Any violation of the terms of this Agreement will result in the immediate termination of the rights granted herein. Upon termination, the User must immediately cease all use and distribution of the Software and destroy all copies in their possession.
 
-8. GOVERNING LAW  
+9. GOVERNING LAW  
   This Agreement shall be governed and construed in accordance with the laws of the Author’s jurisdiction, without regard to its conflict of law principles.
 
-9. CONTACT  
-  For permissions, inquiries, or to arrange royalty payments, contact: MKwolfie2011@proton.me (Official Email).
+10. CONTACT  
+  For permissions, inquiries, or to arrange royalty payments, contact: notMKwolfie2011 (GitHub).
 
 By using, copying, distributing, or commercially exploiting the Software, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this Agreement.
