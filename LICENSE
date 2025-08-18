@@ -1,11 +1,11 @@
-SOFTWARE LICENSE AGREEMENT
+WOLF LICENSE v1.0
 
 Copyright (c) 2025 notMKwolfie2011
 
-This Software License Agreement (“Agreement”) governs the use, distribution, reproduction, and commercialization of the software and associated documentation files (the “Software”), including all beta versions, all official versions (including but not limited to version 1.0, version 2.0, and subsequent releases), and all unofficial versions of GLauncher, authored by notMKwolfie2011 (“Author”).
+This Software License Agreement (“Agreement”), hereafter referred to as the WOLF License, governs the use, distribution, reproduction, and commercialization of the software and associated documentation files (the “Software”), including all beta versions, all official versions (including but not limited to version 1.0, version 2.0, and subsequent releases), and all unofficial versions of GLauncher and other projects authored by notMKwolfie2011 (“Author”).
 
 1. DEFINITIONS  
-  a. “Software” refers to the codebase, associated files, documentation, all beta versions, all official versions of GLauncher (including but not limited to version 1.0, version 2.0, and future versions), and all unofficial versions derived from or distributed as GLauncher, released under this Agreement.  
+  a. “Software” refers to the codebase, associated files, documentation, all beta versions, all official versions of GLauncher (including but not limited to version 1.0, version 2.0, and future versions), all unofficial versions derived from or distributed as GLauncher, and any future projects released under the WOLF License by the Author.  
   b. “User” refers to any individual or entity obtaining a copy of the Software.  
   c. “Commercial Use” refers to any use of the Software intended for monetary gain, including but not limited to selling, licensing, providing paid services, or integrating into commercial products.  
   d. “Net Profits” refers to gross revenue generated from Commercial Use of the Software, less direct costs incurred in generating such revenue.
@@ -14,37 +14,40 @@ This Software License Agreement (“Agreement”) governs the use, distribution,
   a. Subject to the terms and conditions of this Agreement, the Author hereby grants the User a limited, non-exclusive, royalty-free (except as specified in Section 5), and revocable right to use, copy, and distribute unmodified copies of the Software, including beta, official, and unofficial versions.  
   b. The User may not sublicense, rent, lease, or otherwise transfer the Software except as expressly permitted herein.
 
-3. RESTRICTIONS  
+3. LICENSE INCLUSION AND NOTICE  
+  a. **All versions, copies, and redistributions of the Software, whether official, beta, unofficial, modified, or unmodified, MUST include an unaltered copy of this WOLF License file and retain all original copyright, attribution, and disclaimer notices.**
+  b. Removal or alteration of this license file or notices is strictly prohibited and constitutes a material breach of this Agreement.
+
+4. RESTRICTIONS  
   a. The Software may NOT be modified, altered, adapted, merged, translated, reverse engineered, decompiled, disassembled, or used to create derivative works, whether in whole or in part, without the express prior written permission of the Author.  
   b. Distribution of modified or derivative copies of the Software is strictly prohibited.  
-  c. The User must retain and reproduce this copyright notice and all disclaimers in all copies of the Software, whether distributed electronically or in physical form.  
-  d. The User must provide clear attribution to the Author (“notMKwolfie2011”) in all distributed copies.
+  c. The User must provide clear attribution to the Author (“notMKwolfie2011”) in all distributed copies.
 
-4. BETA VERSIONS, OFFICIAL RELEASES, AND UNOFFICIAL VERSIONS  
+5. BETA VERSIONS, OFFICIAL RELEASES, AND UNOFFICIAL VERSIONS  
   a. All terms and restrictions herein apply equally to beta versions, official releases (including but not limited to version 1.0, version 2.0, and future versions), and unofficial versions of the Software.  
   b. Beta versions are provided “as is,” and may be incomplete, unstable, or contain errors. Use of beta versions is at the User’s sole risk.  
-  c. Official and unofficial versions are provided “as is,” and without warranty as described in Section 6.
+  c. Official and unofficial versions are provided “as is,” and without warranty as described in Section 7.
 
-5. COMMERCIAL USE AND PROFIT-SHARING  
+6. COMMERCIAL USE AND PROFIT-SHARING  
   a. Commercial use of the Software is permitted under the express condition that the User shall pay the Author a royalty equal to **ten percent (10%) of all Net Profits** derived from such use.  
   b. The User shall maintain accurate records of all gross revenue and direct costs related to the Commercial Use of the Software, and shall provide such records to the Author upon reasonable request.  
   c. Royalties must be paid to the Author quarterly, within thirty (30) days of the end of each calendar quarter, unless otherwise agreed in writing.  
   d. Failure to pay the required royalty constitutes a material breach of this Agreement and will result in immediate termination of all rights granted herein.
 
-6. NON-RESTRICTION OF ACCESS  
+7. NON-RESTRICTION OF ACCESS  
   a. No party, including but not limited to distributors, service providers, network administrators, software vendors, organizations, institutions, or individuals, may restrict, block, filter, or otherwise prevent access to the Software, in whole or in part, regardless of version (official, beta, or unofficial), by any technical, legal, administrative, or policy means.  
   b. Any attempt to restrict access to the Software is expressly prohibited and constitutes a material breach of this Agreement.
 
-7. DISCLAIMER  
+8. DISCLAIMER  
   THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-8. TERMINATION  
+9. TERMINATION  
   Any violation of the terms of this Agreement will result in the immediate termination of the rights granted herein. Upon termination, the User must immediately cease all use and distribution of the Software and destroy all copies in their possession.
 
-9. GOVERNING LAW  
+10. GOVERNING LAW  
   This Agreement shall be governed and construed in accordance with the laws of the Author’s jurisdiction, without regard to its conflict of law principles.
 
-10. CONTACT  
+11. CONTACT  
   For permissions, inquiries, or to arrange royalty payments, contact: notMKwolfie2011 (GitHub).
 
-By using, copying, distributing, or commercially exploiting the Software, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this Agreement.
+**This WOLF License is intended for use on GLauncher and other major projects by notMKwolfie2011. By using, copying, distributing, or commercially exploiting the Software, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this Agreement.**
